@@ -1,4 +1,5 @@
 @echo off     
+title Zusier's Batch - Performance and Optimization V3.3
 color 5
 echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
