@@ -766,7 +766,7 @@ echo.
 echo.
 echo.
 
-echo Checking System Integrity & Repairs
+echo Checking System Integrity and Repairs
 sfc /scannow
 chkdsk
 echo.
