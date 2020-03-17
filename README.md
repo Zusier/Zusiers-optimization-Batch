@@ -1,5 +1,5 @@
 #About
-Zusier's Optimization Batch File is made to boost your performance and decrease time setting up all my tweaks. ###Ple
+Zusier's Optimization Batch File is made to boost your performance and decrease time setting up all my tweaks.
 
 #Is this safe? Why should I use it?
 
