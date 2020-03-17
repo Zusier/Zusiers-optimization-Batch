@@ -19,6 +19,6 @@ If you would like to join my Performance Server, [join here!](https://discord.gg
 # Credits
 This batch file has been created by Zusier (me) but I have used multiple sources:
 
-[OptizScript]9https://github.com/HydroTweaks/Optiz_Services) (created by Hydro) 
+[OptizScript](https://github.com/HydroTweaks/Optiz_Services) (created by Hydro) 
 
 [N1kobg](https://n1kobg.blogspot.com/) (some reg tweaks in batch NOT reg.reg)
