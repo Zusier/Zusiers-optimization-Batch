@@ -1,5 +1,5 @@
 @echo off     
-title Zusier's Batch - Performance and Optimization V3.3
+title Zusier's Batch - Performance and Optimization V3.5
 color 5
 echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
@@ -484,7 +484,11 @@ if /I "%c%" EQU "N" goto :next3
 goto :choice
 
 :fso
-reg import FSOoff.reg
+Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d "0" /f
+Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehaviorMode" /t REG_DWORD /d "2" /f
+Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_HonorUserFSEBehaviorMode" /t REG_DWORD /d "0" /f
+Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_DXGIHonorFSEWindowsCompatible" /t REG_DWORD /d "0" /f
+Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_EFSEFeatureFlags" /t REG_DWORD /d "0" /f
 echo The Registry integration error level is %ErrorLevel%
 echo FSO disabled attempt successful!
 Echo.
@@ -768,7 +772,6 @@ echo.
 
 echo Checking System Integrity and Repairs
 sfc /scannow
-chkdsk
 echo.
 echo.
 echo.
