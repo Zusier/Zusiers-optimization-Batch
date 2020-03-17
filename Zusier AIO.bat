@@ -1,5 +1,6 @@
 @echo off     
-
+color 5
+echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
 echo       d88P                   Y8P                       888  "88b           888            888      
 echo      d88P                                              888  .88P           888            888      
@@ -8,7 +9,7 @@ echo    d88P    888  888 88K      888 d8P  Y8b 888P"        888  "Y88b     "88b 
 echo   d88P     888  888 "Y8888b. 888 88888888 888          888    888 .d888888 888   888      888  888 
 echo  d88P      Y88b 888      X88 888 Y8b.     888          888   d88P 888  888 Y88b. Y88b.    888  888 
 echo d8888888888 "Y88888  88888P' 888  "Y8888  888          8888888P"  "Y888888  "Y888 "Y8888P 888  888 
-
+echo ---------------------------------------------------------------------------------------------------
 :: BatchGotAdmin
 :-------------------------------------
 REM  --> Check for permissions
@@ -29,16 +30,24 @@ if '%errorlevel%' NEQ '0' (
     CD /D "%~dp0"
 :--------------------------------------
 @echo off
+echo.
+echo.
+echo.
 echo Admin Privileges Acquired!
-
-
+echo.
+echo.
+echo.
 echo Would you like start now?
 pause
 echo.
-Echo Attempting to create a system Restore Point 
-Wmic.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "Before Zusier Batch", 100, 12
-echo Restore Point Created!
+Echo Attempting to create a system Restore Point
 
+Wmic.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "Before Zusier Batch", 100, 12
+
+echo Restore Point Created!
+echo.
+echo.
+echo.
 
 
 echo integrating Zusier's Registry Tweak (edit reg.reg to see what it is changing + it's organized ;)
@@ -52,7 +61,22 @@ echo.
 echo.
 echo.
 echo disabling some services temporarily and stopping cortana + other shit
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "AllowCortana" /t REG_DWORD /d "0" /f
+Reg.exe add "HKCU\Software\Microsoft\Windows\Curre
+echo.
+echo.
+echo.
+ECHO j | net stop Spooler
+sc config "Spooler" start=disabled
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\MapsBroker" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\ALG" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\PeerDistSvc" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\CertPropSvc" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\irmon" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\RpcLocator" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\RetailDemo" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SCPolicySvc" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMPTRAP" /v Start /t REG_DWORD /d 00000004 /f
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\TermServicentVersion\Search" /v "AllowCortana" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "CortanaEnabled" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d "1" /f
@@ -76,22 +100,7 @@ echo.
 
 
 
-echo disabling shit services...
-echo.
-echo.
-echo.
-ECHO j | net stop Spooler
-sc config "Spooler" start=disabled
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\MapsBroker" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\ALG" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\PeerDistSvc" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\CertPropSvc" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\irmon" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\RpcLocator" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\RetailDemo" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SCPolicySvc" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMPTRAP" /v Start /t REG_DWORD /d 00000004 /f
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\TermService" /v Start /t REG_DWORD /d 00000004 /f
+echo disabling shit services..." /v Start /t REG_DWORD /d 00000004 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\UmRdpService" /v Start /t REG_DWORD /d 00000004 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\AJRouter" /v Start /t REG_DWORD /d 00000004 /f
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\BthHFSrv" /v Start /t REG_DWORD /d 00000004 /f
@@ -362,13 +371,17 @@ goto :choice
 reg import FSOoff.reg
 echo The Registry integration error level is %ErrorLevel%
 echo FSO disabled attempt successful!
-
+Echo.
+Echo.
+Echo.
 :next3
 echo Network optimization begins
 ipconfig /release
 ipconfig /renew
 ipconfig /flushdns
-
+Echo.
+Echo.
+Echo.
 echo The next process will start soon...
 
 :choice
@@ -387,6 +400,7 @@ bcdedit /set useplatformtick yes
 bcdedit /set useplatformclock no
 bcdedit /set disabledynamictick yes
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_DWORD /d "0" /f
+start audl.exe 
 echo Finished!
 echo.
 echo.
@@ -421,10 +435,10 @@ echo Debloating useless packages
 echo.
 echo.
 echo.
-
-
 echo Preventing Data Collection and Telemetry 
-
+Echo.
+Echo.
+Echo.
 sc stop DiagTrack
 net stop DiagTrack
 sc config DiagTrack start= disabled
@@ -455,10 +469,15 @@ del "%WinDir%\System32\HelpPane.exe" /s /f /q > NUL 2>&1
 Echo y| Reg.exe delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "NvBackend" > NUL
 Echo.
 Echo. smartscreen.exe Deleted
+Echo.
 Echo. GameBarPresenceWriter.exe Deleted
+Echo.
 Echo. mobsync.exe Deleted
+Echo.
 Echo. HelpPane.exe Deleted
+Echo.
 Echo. NvBackend Stopped if exist 
+Echo.
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\AutoLogger-Diagtrack-Listener" /v "Start" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /v "DiagnosticErrorText" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Strings" /v "DiagnosticErrorText" /t REG_SZ /d "" /f
@@ -594,9 +613,11 @@ Reg.exe add "HKCU\Control Panel\Desktop" /v "WaitToKillAppTimeout" /t REG_SZ /d 
 Reg.exe add "HKCU\Control Panel\Desktop" /v "LowLevelHooksTimeout" /t REG_SZ /d "5000" /f
 Reg.exe add "HKCU\Control Panel\Desktop" /v "HungAppTimeout" /t REG_SZ /d "5000" /f
 Reg.exe add "HKCU\Control Panel\Desktop" /v "MenuShowDelay" /t REG_SZ /d "0" /f
-
+echo.
+echo.
+echo.
 echo Finished Main Processes, beginning Post Process/Wrap-Up
-
+echo.
 echo Cleaning temp
 
 del /s /f /q c:\windows\temp\*.*
@@ -607,16 +628,36 @@ del /s /f /q %temp%\*.*
 rd /s /q %temp%
 md %temp%
 del c:\WIN386.SWP
+del /s /f /q %WinDir%\temp\*.*
+del /s /f /q %WinDir%\Prefetch\*.*
+del /s /f /q %Temp%\*.*
+del /s /f /q %AppData%\temp\*.*
+del /s /f /q %HomePath%\AppData\LocalLow\temp\*.*
+rd /s /q %WinDir%\temp
+rd /s /q %WinDir%\Prefetch
+rd /s /q %Temp%
+rd /s /q %AppData%\temp
+rd /s /q %HomePath%\AppData\LocalLow\temp
+md %WinDir%\temp
+md %WinDir%\Prefetch
+md %Temp%
+md %AppData%\temp
+md %HomePath%\AppData\LocalLow\temp
 
 
 echo Temp Clean Finished!
+echo.
+echo.
+echo.
 
 echo Checking System Integrity
 sfc /scannow
 
-
+echo.
+echo.
+echo.
 echo ------------------------------------------------------
 echo Process Complete! RESTART YOUR COMPUTER :)
 echo 
-Created with blood, sweat and tears by Zusier (Zusier#0834 on Discord)
+echo Created with blood, sweat and tears by Zusier (Zusier#0834 on Discord)
 PAUSE
