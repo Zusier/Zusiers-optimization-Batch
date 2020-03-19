@@ -736,6 +736,54 @@ Reg.exe add "HKCU\Control Panel\Desktop" /v "MenuShowDelay" /t REG_SZ /d "0" /f
 echo.
 echo.
 echo.
+:choice
+set /P c=Would you like BCDedit tweaks (would only reccomend if you have done research on what each command does and instead doing them manually).[Y/N]?
+if /I "%c%" EQU "Y" goto :bcdedit
+if /I "%c%" EQU "N" goto :next5
+goto :choice
+echo.
+echo.
+echo.
+@echo Disable HPET
+bcdedit /set useplatformclock no
+
+@echo Disable dynamic tick (laptop power savings)
+bcdedit /set disabledynamictick yes
+
+@echo Disable synthetic timers
+bcdedit /set useplatformtick yes
+
+@echo Boot timeout 0
+bcdedit /timeout 0
+
+@echo Disable nx
+bcdedit /set nx optout
+
+@echo Disable boot screen animation
+bcdedit /set bootux disabled
+
+@echo Speed up boot times
+bcdedit /set bootmenupolicy standard
+
+@echo Disable hyper virtualization
+bcdedit /set hypervisorlaunchtype off
+
+@echo Disable trusted platform module (TPM)
+bcdedit /set tpmbootentropy ForceDisable
+
+@echo Disable boot logo
+bcdedit /set {globalsettings} custom:16000067 true
+
+@echo Disable spinning animation
+bcdedit /set {globalsettings} custom:16000069 true
+
+@echo Disable boot messages
+bcdedit /set {globalsettings} custom:16000068 true
+echo.
+echo.
+echo.
+:next5
+
 echo Finished Main Processes, beginning Post Process/Wrap-Up
 echo.
 echo Cleaning temp
