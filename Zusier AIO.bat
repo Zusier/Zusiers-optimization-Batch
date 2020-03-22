@@ -563,7 +563,6 @@ Powershell.exe Set-NetTCPSetting -SettingName internet -AutoTuningLevelLocal nor
 Powershell.exe Set-NetTCPSetting -SettingName internet -ScalingHeuristics disabled
 powershell.exe Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing enabled
 powershell.exe Set-NetOffloadGlobalSetting -ReceiveSideScaling enabled
-powershell.exe Disable-NetAdapterLso
 powershell.exe Set-NetTCPSetting -SettingName internet -Timestamps disabled
 powershell.exe Set-NetOffloadGlobalSetting -Chimney disabled
 powershell.exe Set-NetTCPSetting -SettingName internet -EcnCapability disabled
