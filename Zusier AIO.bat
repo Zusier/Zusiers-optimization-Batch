@@ -1,5 +1,5 @@
-@echo off
-title Zusier's Batch - Performance and Optimization V4.3.4
+
+title Zusier's Batch - Performance and Optimization V4.9.1
 color 5
 echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
@@ -14,6 +14,16 @@ echo ---------------------------------------------------------------------------
 
 echo Change Log
 echo .
+echo V4.9.1
+echo - fixed command loop
+echo - removed network upgrade (powershell error fuckup)
+echo - fixed spelling error (actually so tired help meeeeee)
+echo - next release will be completely reworked!
+echo V4.4.0
+echo -upgraded network tweaks to change some ethernet settings (jumbo packet, power saving etc.)
+echo V4.3.41
+echo -small hotfix (changelog shit)
+echo.
 echo V4.3.4
 echo - revamped Internet optimizations
 echo - added DNS server change to 1.1.1.1 
@@ -319,13 +329,13 @@ Echo.
 
 :choice
 set /P c=Do you want to customize your services? Script segment created by OptiZ Script (This may overwrite the previous service tweak fix)[Y/N]?
-if /I "%c%" EQU "Y" goto :next
+if /I "%c%" EQU "Y" goto :next3000
 if /I "%c%" EQU "N" goto :no
 goto :choice
 
 goto :next
 
-:next
+:next3000
 Echo. [101;41mDisable Microsoft Xbox?:[0m
 Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
@@ -522,11 +532,12 @@ Echo.
 Echo.
 Echo.
 Echo Services script by OptiZ Script has finished!
+color 5
 :next2
 echo The next process will begin soon
-
+color 5
 :no
-
+color 5
 :choice
 set /P c=Do you want to disable FSO globally? (sometimes a program will reenable it)[Y/N]?
 if /I "%c%" EQU "Y" goto :fso
@@ -608,7 +619,7 @@ Echo.
 echo The next process will start soon...
 
 :choice
-set /P c=Do you want to lower latency (disables dynamic tick etc, platform tick etc.[Y/N]?
+set /P c=Do you want to lower latency (disables dynamic tick etc, platform tick etc.)[Y/N]?
 if /I "%c%" EQU "Y" goto :tick100
 if /I "%c%" EQU "N" goto :next45
 goto :choice
@@ -844,9 +855,9 @@ echo.
 echo.
 echo.
 :choice
-set /P c=Would you like BCDedit tweaks (would only reccomend if you have done research on what each command does and instead doing them manually).[Y/N]?
+set /P c=Would you like BCDedit tweaks? (would only recommend if you have done research on what each command does and instead doing them manually).[Y/N]?
 if /I "%c%" EQU "Y" goto :bcdedit
-if /I "%c%" EQU "N" goto :next5
+if /I "%c%" EQU "N" goto :next766
 goto :choice
 echo.
 :bcdedit
@@ -872,7 +883,7 @@ add reg HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability /v TimeStampI
 echo.
 echo.
 echo.
-:next5
+:next766
 
 echo Finished Main Processes, beginning Post Process/Wrap-Up
 echo.
