@@ -1,5 +1,5 @@
-  
-title Zusier's Batch - Performance and Optimization V4.1
+@echo off
+title Zusier's Batch - Performance and Optimization V4.3.4
 color 5
 echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
@@ -13,11 +13,19 @@ echo d8888888888 "Y88888  88888P' 888  "Y8888  888          8888888P"  "Y888888 
 echo ---------------------------------------------------------------------------------------------------
 
 echo Change Log
+echo .
+echo V4.3.4
+echo - revamped Internet optimizations
+echo - added DNS server change to 1.1.1.1 
+echo - re-added Temp Clean (no reason I removed it so I added it back)
+echo.
+echo V4.2
+echo - removed some conflicting services
 echo V4.1 -Overhaul! 
 echo - many errors may occur (from my testing and tried to debug)
 echo - changed bcdedit to be safer and better
 echo - added many tweaks for network adapter, gpu and services
-echo - removed temp clean (due to long run times)
+echo - removed temp clean
 echo.
 echo V3.5.5 -adds a BCDedit option with multiple tweaks
 echo.
@@ -129,24 +137,19 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SubscribedCon
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SystemPaneSuggestionsEnabled" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SubscribedContent-338388Enabled" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "AppsUseLightTheme" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "EnableTransparency" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SystemUsesLightTheme" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "BingSearchEnabled" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "DisableAntiSpyware" /t REG_SZ /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "DisableWebSearch" /t REG_SZ /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "AutoUpdateEnabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SmartScreenEnabled" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "EnableWebContentEvaluation" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" /v "DownloadMode" /t REG_DWORD /d "0" /f
-Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehavior" /t REG_DWORD /d "2" /f
-Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehaviorMode" /t REG_DWORD /d "2" /f
+
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t REG_SZ /d "0" /f
 reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enableboottrace" /t reg_dword /d "0" /f
 reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enableprefetcher" /t reg_dword /d "0" /f
 reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enablesuperfetch" /t reg_dword /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "DisableAutomaticRestartSignOn" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" /v "StartupDelayInMSec" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "HiberbootEnabled" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableSuperfetch" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableBoottrace" /t REG_DWORD /d "0" /f
@@ -264,14 +267,6 @@ echo.
 
 echo disabling shit services..." /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\UmRdpService" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\AJRouter" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\BthHFSrv" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\bthserv" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\dmwappushsvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\HvHost" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\vmickvpexchange" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\vmicguestinterface" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\vmicshutdown" /v Start /t REG_DWORD /d 00000004 /f
 sc config FontCache start= demand
 sc config CDPSvc start= demand
 sc config Spooler start= demand
@@ -280,7 +275,6 @@ sc config PeerDistSvc start= disabled
 sc config OneSyncSvc start= disabled
 sc config lfsvc start= disabled
 sc config BcastDVRUserService start= disabled
-sc config SmsRouter start= demand
 sc config CscService start= disabled
 sc config WSearch start= disabled
 sc config TermService start= disabled
@@ -288,13 +282,8 @@ sc config SessionEnv start= disabled
 sc config TrkWks start= disabled
 sc config ShellHWDetection start= demand
 sc config WbioSrvc start= disabled
-sc config LanmanServer start= demand
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\vmicheartbeat" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\vmicvmsession" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\vmicrdv" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SharedAccess" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\IpxlatCfgSvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SmsRouter" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\CscService" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SEMgrSvc" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\PhoneSvc" /v Start /t REG_DWORD /d 00000004 /f
@@ -306,8 +295,6 @@ reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\ScDeviceEnum" 
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\TabletInputService" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\WFDSConSvc" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\FrameServer" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\icssvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\lfsvc" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\NcdAutoSetup" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\NfsClnt" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\CscService" /v Start /t REG_DWORD /d 00000004 /f
@@ -571,6 +558,42 @@ netsh int ip delete arpcache
 netsh int ipv4 reset reset.log 
 netsh int ipv6 reset reset.log 
 ipconfig /flushdns
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_SZ /d "fffffff" /f
+netsh int tcp set supplemental internet congestionprovider=ctcp
+Powershell.exe Set-NetTCPSetting -SettingName internet -AutoTuningLevelLocal normal
+Powershell.exe Set-NetTCPSetting -SettingName internet -ScalingHeuristics disabled
+powershell.exe Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing enabled
+powershell.exe Set-NetOffloadGlobalSetting -ReceiveSideScaling enabled
+powershell.exe Disable-NetAdapterLso
+powershell.exe Set-NetTCPSetting -SettingName internet -Timestamps disabled
+powershell.exe Set-NetOffloadGlobalSetting -Chimney disabled
+powershell.exe Set-NetTCPSetting -SettingName internet -EcnCapability disabled
+powershell.exe Set-NetTCPSetting -SettingName internet -MaxSynRetransmissions 2
+powershell.exe Set-NetTCPSetting -SettingName internet -NonSackRttResiliency disabled
+powershell.exe Set-NetTCPSetting -SettingName internet -InitialRto 2000
+powershell.exe Set-NetTCPSetting -SettingName internet -MinRto 300
+netsh interface ipv4 add dnsserver "Local Area Connection" 1.1.1.1
+netsh interface ipv6 add dnsserver "Local Area Connection" 2606:4700:4700::1111
+netsh interface ipv4 add dnsserver "Wireless Network Connection" 1.0.0.1
+netsh interface ipv6 add dnsserver "Wireless Network Connection" 2606:4700:4700::1001
+netsh interface ipv4 set subinterface "Ethernet" mtu=1500 store=persistent
+netsh interface ipv6 set subinterface "Ethernet" mtu=1500 store=persistent
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "MaxUserPort" /t REG_DWORD /d "65534" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "DisableTaskOffload" /t REG_DWORD /d "1" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "TCPTimedWaitDelay" /t REG_DWORD /d "30" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "EnablePMTUDiscovery" /t REG_DWORD /d "1" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "EnablePMTUBHDetect" /t REG_DWORD /d "1" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "DefaultTTL" /t REG_DWORD /d "64" /f
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" /v "explorer.exe" /t REG_DWORD /d "10" /f
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" /v "iexplore.exe" /t REG_DWORD /d "10" /f
+Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Psched" /v "NonBestEffortLimit" /t REG_DWORD /d "0" /f
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPERSERVER" /v "explorer.exe" /t REG_DWORD /d "10" /f
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPERSERVER" /v "iexplore.exe" /t REG_DWORD /d "10" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "DnsPriority" /t REG_DWORD /d "6" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "HostsPriority" /t REG_DWORD /d "5" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "LocalPriority" /t REG_DWORD /d "4" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "NetbtPriority" /t REG_DWORD /d "7" /f
+Reg.exe add "HKLM\SOFTWARE\Microsoft\MSMQ\Parameters" /v "TCPNoDelay" /t REG_DWORD /d "1" /f
 netsh int ip set global taskoffload=disabled 
 netsh int tcp set heuristics disabled 
 netsh int tcp set global rss=enabled 
@@ -857,7 +880,33 @@ echo Finished Main Processes, beginning Post Process/Wrap-Up
 echo.
 echo.
 echo.
+echo Cleaning temp
 echo.
+del /s /f /q c:\windows\temp\*.*
+rd /s /q c:\windows\temp
+md c:\windows\temp
+del /s /f /q C:\WINDOWS\Prefetch
+del /s /f /q %temp%\*.*
+rd /s /q %temp%
+md %temp%
+del c:\WIN386.SWP
+del /s /f /q %WinDir%\temp\*.*
+del /s /f /q %WinDir%\Prefetch\*.*
+del /s /f /q %Temp%\*.*
+del /s /f /q %AppData%\temp\*.*
+del /s /f /q %HomePath%\AppData\LocalLow\temp\*.*
+rd /s /q %WinDir%\temp
+rd /s /q %WinDir%\Prefetch
+rd /s /q %Temp%
+rd /s /q %AppData%\temp
+rd /s /q %HomePath%\AppData\LocalLow\temp
+md %WinDir%\temp
+md %WinDir%\Prefetch
+md %Temp%
+md %AppData%\temp
+md %HomePath%\AppData\LocalLow\temp
+echo.
+echo Temp Clean Finished!
 
 echo Checking System Integrity and Repairs
 sfc /scannow
