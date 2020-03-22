@@ -22,7 +22,7 @@ echo.
 echo V4.2
 echo - removed some conflicting services
 echo V4.1 -Overhaul! 
-echo - many errors may occur (from my testing and tried to debug)
+echo - many errors may occur (from my testing and tried to debug) (fixed)
 echo - changed bcdedit to be safer and better
 echo - added many tweaks for network adapter, gpu and services
 echo - removed temp clean
@@ -557,7 +557,6 @@ netsh int tcp reset
 netsh int ip delete arpcache 
 netsh int ipv4 reset reset.log 
 netsh int ipv6 reset reset.log 
-ipconfig /flushdns
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_SZ /d "fffffff" /f
 netsh int tcp set supplemental internet congestionprovider=ctcp
 Powershell.exe Set-NetTCPSetting -SettingName internet -AutoTuningLevelLocal normal
