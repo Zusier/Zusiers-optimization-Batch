@@ -46,4 +46,4 @@ This batch file has been created by Zusier (me) but I have used multiple sources
 
 [OptizScript](https://github.com/HydroTweaks/Optiz_Services) (created by Hydro) 
 
-[N1kobg](https://n1kobg.blogspot.com/) (some reg tweaks in batch NOT reg.reg)
+[N1kobg](https://n1kobg.blogspot.com/)
