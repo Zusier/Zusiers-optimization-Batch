@@ -1,5 +1,5 @@
 
-title Zusier's Batch - Performance and Optimization V4.9.1
+title Zusier's Batch - Performance and Optimization V5.0.0
 color 5
 echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
@@ -98,7 +98,6 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowDeviceNameInTelemetry" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableInstallerDetection" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "DisallowShaking" /t REG_DWORD /d "1" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "EnableBalloonTips" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoLowDiskSpaceChecks" /t REG_DWORD /d "1" /f
@@ -166,7 +165,6 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Manage
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\System\CurrentControlSet\Services\VxD\BIOS" /v "CPUPriority" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\System\CurrentControlSet\Services\VxD\BIOS" /v "FastDRAM" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "SystemPages" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "LargeSystemCache" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f
@@ -186,14 +184,11 @@ reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f8
 reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "enablemclkslowdown" /t reg_dword /d "00000000" /f
 reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "enablenvclkslowdown" /t reg_dword /d "00000000" /f
 
-
 Reg.exe add "HKCU\Control Panel\Mouse" /v "MouseHoverTime" /t REG_SZ /d "0" /f
 Reg.exe add "HKCU\Control Panel\Mouse" /v "MouseSensitivity" /t REG_SZ /d "10" /f
 Reg.exe add "HKU\.DEFAULT\Control Panel\Mouse" /v "MouseSpeed" /t REG_SZ /d "0" /f
 Reg.exe add "HKU\.DEFAULT\Control Panel\Mouse" /v "MouseThreshold1" /t REG_SZ /d "0" /f
 Reg.exe add "HKU\.DEFAULT\Control Panel\Mouse" /v "MouseThreshold2" /t REG_SZ /d "0" /f
-
-
 
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_SZ /d "00000000" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_SZ /d "fffffff" /f
@@ -210,14 +205,14 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "L
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "HostsPriority" /t REG_DWORD /d "5" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "DnsPriority" /t REG_DWORD /d "6" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "NetbtPriority" /t REG_DWORD /d "7" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{67461e24-4df1-441e-960b-4d25a8c5c2a2}\0000" /v "PerfLevelSrc" /t REG_DWORD /d "8738" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{67461e24-4df1-441e-960b-4d25a8c5c2a2}\0000" /v "PowerMizerEnable" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{67461e24-4df1-441e-960b-4d25a8c5c2a2}\0000" /v "PowerMizerLevel" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{67461e24-4df1-441e-960b-4d25a8c5c2a2}\0000" /v "PowerMizerLevelAC" /t REG_DWORD /d "1" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PerfLevelSrc" /t REG_DWORD /d "8738" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerEnable" /t REG_DWORD /d "1" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerLevel" /t REG_DWORD /d "1" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerLevelAC" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /f
 powercfg -devicedisablewake "HID-compliant mouse"
 powercfg -devicedisablewake "HID keyboard Device"
-powercfg -setactive "67461e24-4df1-441e-960b-4d25a8c5c2a2"
+powercfg -setactive "de01174f-7fa8-4f81-8f82-bc6c84a39e47"
 echo.
 echo.
 echo.
@@ -240,17 +235,7 @@ echo disabling some services temporarily and stopping cortana + other shit
 echo.
 echo.
 echo.
-ECHO j | net stop Spooler
-sc config "Spooler" start=disabled
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\MapsBroker" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\ALG" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\PeerDistSvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\CertPropSvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\irmon" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\RpcLocator" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\RetailDemo" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SCPolicySvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMPTRAP" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\TermServicentVersion\Search" /v "AllowCortana" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "CortanaEnabled" /t REG_DWORD /d "0" /f
@@ -276,46 +261,23 @@ echo.
 
 
 echo disabling shit services..." /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\UmRdpService" /v Start /t REG_DWORD /d 00000004 /f
 sc config FontCache start= demand
 sc config CDPSvc start= demand
-sc config Spooler start= demand
-sc config WpnUserService start= demand
-sc config PeerDistSvc start= disabled
 sc config OneSyncSvc start= disabled
-sc config lfsvc start= disabled
 sc config BcastDVRUserService start= disabled
-sc config CscService start= disabled
 sc config WSearch start= disabled
-sc config TermService start= disabled
-sc config SessionEnv start= disabled
 sc config TrkWks start= disabled
 sc config ShellHWDetection start= demand
-sc config WbioSrvc start= disabled
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SharedAccess" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\IpxlatCfgSvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\CscService" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SEMgrSvc" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\PhoneSvc" /v Start /t REG_DWORD /d 00000004 /f
 sc config stisvc start= demand
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SensorDataService" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SensrSvc" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SensorService" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\ScDeviceEnum" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\TabletInputService" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\WFDSConSvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\FrameServer" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\NcdAutoSetup" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\NfsClnt" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\CscService" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\CertPropSvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\msahci" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\PcaSvc" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\PNRPsvc" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\RemoteRegistry" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\HomeGroupListener" /v Start /t REG_DWORD /d 00000004 /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\HomeGroupProvider" /v Start /t REG_DWORD /d 00000004 /f
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SENS" /v Start /t REG_DWORD /d 00000004 /f
 echo.
 echo.
 echo.
@@ -479,7 +441,6 @@ IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
 Echo.
 :apply
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\RasAuto" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\RasMan" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\TermService" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\UmRdpService" /v "Start" /t REG_DWORD /d "4" /f
@@ -500,7 +461,6 @@ IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
 Echo.
 :apply
-reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\LanmanServer" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Fax" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Spooler" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\PrintNotify" /v "Start" /t REG_DWORD /d "4" /f
@@ -562,12 +522,8 @@ ipconfig /renew
 ipconfig /flushdns
 netsh winsock reset catalog 
 netsh winsock reset 
-netsh winsock set autotuning off 
 netsh int ip reset 
-netsh int tcp reset 
-netsh int ip delete arpcache 
-netsh int ipv4 reset reset.log 
-netsh int ipv6 reset reset.log 
+netsh int tcp reset  
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_SZ /d "fffffff" /f
 netsh int tcp set supplemental internet congestionprovider=ctcp
 Powershell.exe Set-NetTCPSetting -SettingName internet -AutoTuningLevelLocal normal
@@ -606,6 +562,7 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\MSMQ\Parameters" /v "TCPNoDelay" /t REG_DWO
 netsh int ip set global taskoffload=disabled 
 netsh int tcp set heuristics disabled 
 netsh int tcp set global rss=enabled 
+netsh int tcp show global
 netsh int tcp set global rsc=disabled 
 netsh int tcp set global timestamps=disabled 
 netsh int tcp set global nonsackrttresiliency=disabled 
@@ -618,6 +575,31 @@ Echo.
 Echo.
 echo The next process will start soon...
 
+:choice
+set /P c=Do you use wifi? This tries to fix a problem with wifi users. (Hard to troubleshoot because I use ethernet :p) [Y/N]?
+if /I "%c%" EQU "Y" goto :WifiFix
+if /I "%c%" EQU "N" goto :next98367
+goto :choice
+
+:WifiFix
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WlanSvc" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WwanSvc" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NcaSvc" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NcbService" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NcdAutoSetup" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Netman" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\netprofm" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NetSetupSvc" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NlaSvc" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\nsi" /v "Start" /t REG_DWORD /d "3" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\CSC" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vwififlt" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NcaSvc" /v "Start" /t REG_DWORD /d "2" /f
+
+
+
+:next98367
+echo.
 :choice
 set /P c=Do you want to lower latency (disables dynamic tick etc, platform tick etc.)[Y/N]?
 if /I "%c%" EQU "Y" goto :tick100
@@ -677,11 +659,6 @@ sc stop DiagTrack
 net stop DiagTrack
 sc config DiagTrack start= disabled
 sc delete DiagTrack
-sc stop WMPNetworkSvc
-sc stop dmwappushservice
-net stop dmwappushservice 
-sc config dmwappushservice start= disabled
-sc delete dmwappushservice
 sc config diagnosticshub.standardcollector.service start= disabled
 net stop diagnosticshub.standardcollector.service > NUL 2>&1
 takeown /f "%WinDir%\System32\smartscreen.exe" /a
@@ -791,7 +768,6 @@ Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Speech" /v "AllowSpeechModelUpdate
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferUpgrade" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferUpgradePeriod" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferUpdatePeriod" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" /v "PreventDeviceMetadataFromNetwork" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate" /v "AutoDownload" /t REG_DWORD /d "2" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\Software\Policies\Microsoft\Windows\SettingSync" /v "DisableSettingSync" /t "REG_DWORD" /d "2" /f
