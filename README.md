@@ -15,7 +15,7 @@ If you would like to join my Performance Server, [join here!](https://discord.gg
 4. let it run and type Y or N when questions are asked
 5. Enjoy :)
 
-# What Does This Tweak?
+# What Does This Tweak Do?
 This tweaks:
 -Mouse and Keyboard Responsiveness
 
