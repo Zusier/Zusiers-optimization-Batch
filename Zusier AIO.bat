@@ -1,5 +1,5 @@
-
-title Zusier's Batch - Performance and Optimization V5.0.0
+@echo off
+title Zusier's Batch - Performance and Optimization V5.0.1
 color 5
 echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
@@ -14,6 +14,14 @@ echo ---------------------------------------------------------------------------
 
 echo Change Log
 echo .
+echo V5.0.1
+echo - Removed some service tweaks for stability
+echo - Reworked and revised file
+echo - Wifi fix added, DM me if you have problems 
+echo - reordered some tweaks to be compatible
+echo.
+echo V5.0.0
+echo - hotfix for wifi
 echo V4.9.1
 echo - fixed command loop
 echo - removed network upgrade (powershell error fuckup)
@@ -94,7 +102,6 @@ echo.
 
 echo integrating Zusier's Registry Tweak 
 echo.
-Reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "value" /t REG_SZ /d "00000000" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowDeviceNameInTelemetry" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableInstallerDetection" /t REG_DWORD /d "0" /f
@@ -154,7 +161,6 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "AutoUpdateEna
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "EnableWebContentEvaluation" /t REG_SZ /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" /v "DownloadMode" /t REG_DWORD /d "0" /f
 
-Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t REG_SZ /d "0" /f
 reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enableboottrace" /t reg_dword /d "0" /f
 reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enableprefetcher" /t reg_dword /d "0" /f
 reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enablesuperfetch" /t reg_dword /d "0" /f
@@ -213,6 +219,7 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /f
 powercfg -devicedisablewake "HID-compliant mouse"
 powercfg -devicedisablewake "HID keyboard Device"
 powercfg -setactive "de01174f-7fa8-4f81-8f82-bc6c84a39e47"
+
 echo.
 echo.
 echo.
@@ -286,14 +293,10 @@ echo The Next process will begin soon...
 Echo.
 Echo.
 Echo.
-
-
-
-:choice
+:optiz
 set /P c=Do you want to customize your services? Script segment created by OptiZ Script (This may overwrite the previous service tweak fix)[Y/N]?
 if /I "%c%" EQU "Y" goto :next3000
 if /I "%c%" EQU "N" goto :no
-goto :choice
 
 goto :next
 
@@ -308,6 +311,8 @@ IF /I "%choice%"=="N" goto next
 Echo.
 :apply
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XboxNetApiSvc" /v "Start" /t REG_DWORD /d "4" /f
+Reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "value" /t REG_SZ /d "00000000" /f
+Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t REG_SZ /d "0" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XblGameSave" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XblAuthManager" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\xbgm" /v "Start" /t REG_DWORD /d "4" /f
@@ -498,11 +503,11 @@ echo The next process will begin soon
 color 5
 :no
 color 5
-:choice
+ 
 set /P c=Do you want to disable FSO globally? (sometimes a program will reenable it)[Y/N]?
 if /I "%c%" EQU "Y" goto :fso
 if /I "%c%" EQU "N" goto :next3
-goto :choice
+ 
 
 :fso
 Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d "0" /f
@@ -567,7 +572,7 @@ netsh int tcp set global rsc=disabled
 netsh int tcp set global timestamps=disabled 
 netsh int tcp set global nonsackrttresiliency=disabled 
 netsh int tcp set global maxsynretransmissions=2 
-netsh int tcp set global autotuninglevel=disabled 
+netsh int tcp set global autotuninglevel=normal
 netsh int tcp set global ecncapability=enabled
 netsh int tcp set global fastopen=enabled 
 Echo.
@@ -575,11 +580,11 @@ Echo.
 Echo.
 echo The next process will start soon...
 
-:choice
-set /P c=Do you use wifi? This tries to fix a problem with wifi users. (Hard to troubleshoot because I use ethernet :p) [Y/N]?
+ 
+set /P c=Do you use wifi? (DONT USE IF ETHERNET) This tries to fix a problem with wifi users. (Hard to troubleshoot because I use ethernet :p) [Y/N]?
 if /I "%c%" EQU "Y" goto :WifiFix
 if /I "%c%" EQU "N" goto :next98367
-goto :choice
+ 
 
 :WifiFix
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WlanSvc" /v "Start" /t REG_DWORD /d "2" /f
@@ -595,16 +600,18 @@ reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\nsi" /v "Start" /t
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\CSC" /v "Start" /t REG_DWORD /d "2" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vwififlt" /v "Start" /t REG_DWORD /d "2" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NcaSvc" /v "Start" /t REG_DWORD /d "2" /f
+reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\wscsvc" /v "Start" /t REG_DWORD /d "2" /f
+netsh interface set interface name="Wireless Network Connection" admin=ENABLED
 
 
 
 :next98367
 echo.
-:choice
+ 
 set /P c=Do you want to lower latency (disables dynamic tick etc, platform tick etc.)[Y/N]?
 if /I "%c%" EQU "Y" goto :tick100
 if /I "%c%" EQU "N" goto :next45
-goto :choice
+ 
 echo.
 echo.
 echo.
@@ -627,7 +634,7 @@ echo.
 echo.
 :next45
 
-echo Debloating useless packages
+echo Debloating useless packages (This may take some time. errors occur when package is missing... ignore them)
 @powershell "Get-AppxPackage *3dbuilder* | Remove-AppxPackage"
 @powershell "Get-AppxPackage *sway* | Remove-AppxPackage"
 @powershell "Get-AppxPackage *messaging* | Remove-AppxPackage"
@@ -830,13 +837,13 @@ Reg.exe add "HKCU\Control Panel\Desktop" /v "MenuShowDelay" /t REG_SZ /d "0" /f
 echo.
 echo.
 echo.
-:choice
+ 
 set /P c=Would you like BCDedit tweaks? (would only recommend if you have done research on what each command does and instead doing them manually).[Y/N]?
-if /I "%c%" EQU "Y" goto :bcdedit
+if /I "%c%" EQU "Y" goto :bcdedit67
 if /I "%c%" EQU "N" goto :next766
-goto :choice
+ 
 echo.
-:bcdedit
+:bcdedit67
 echo.
 bcdedit /set useplatformclock no
 bcdedit /set useplatformtick yes
@@ -855,7 +862,7 @@ bcdedit /set uselegacyapicmode no
 bcdedit /set usefirmwarepcisettings yes
 bcdedit /set tscsyncpolicy legacy
 bcdedit /set x2apicpolicy enable
-add reg HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability /v TimeStampInterval /t reg_dword /d 0 /f
+reg.exe add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability /v TimeStampInterval /t reg_dword /d 0 /f
 echo.
 echo.
 echo.
@@ -905,3 +912,5 @@ echo Process Complete! RESTART YOUR COMPUTER :)
 echo 
 echo Created with blood, sweat and tears by Zusier (Zusier#0834 on Discord)
 PAUSE
+echo.
+exit
