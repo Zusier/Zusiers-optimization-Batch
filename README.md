@@ -54,3 +54,5 @@ This batch file has been created by Zusier (me) but I have used multiple sources
 [Melody & Community](https://discord.gg/fzWpQgm) Some latency and network tweaks but most of all provided machine_specific.exe (disables sleep, enables msi, and optimizes devices for latency in a machine specific manner.)
 
 [Calypto](https://docs.google.com/document/d/1c2-lUJq74wuYK1WrA_bIvgb89dUN0sj8-hO3vqmrau4/edit?usp=sharing)  A honorable mention to the ultimate latency guide.
+
+[REAL](https://github.com/miniant-git/REAL) Program that reduces audio latency included in Releases
