@@ -14,6 +14,11 @@ echo ---------------------------------------------------------------------------
 
 echo Change Log
 echo .
+echo V5.1.5
+echo - Added Take OwnerShip to Context Menu
+echo - Blocks Camera on lockscreen
+echo - Multiple Privacy Tweaks
+echo - Added Alternative Tweak for HDD (SSD trim tweak)
 echo V5.1.0
 echo -Integrated multiple tweaks and her exe from Melody more info about her on readme.md
 echo -Added TRIM option
@@ -104,8 +109,30 @@ echo Restore Point Created!
 echo.
 echo.
 echo.
-
-
+echo Backing Up Registry...
+SETLOCAL
+SET RegBackup=%SYSTEMDRIVE%\RegBackup
+IF NOT EXIST "%RegBackup%" md "%RegBackup%"
+IF EXIST "%RegBackup%\HKLM.reg" DEL "%RegBackup%\HKLM.reg"
+REG export HKLM "%RegBackup%\HKLM.reg"
+IF EXIST "%RegBackup%\HKCU.reg" DEL "%RegBackup%\HKCU.reg"
+REG export HKCU "%RegBackup%\HKCU.reg"
+IF EXIST "%RegBackup%\HKCR.reg" DEL "%RegBackup%\HKCR.reg"
+REG export HKCR "%RegBackup%\HKCR.reg"
+IF EXIST "%RegBackup%\HKU.reg" DEL "%RegBackup%\HKU.reg"
+REG export HKU "%RegBackup%\HKU.reg"
+IF EXIST "%RegBackup%\HKCC.reg" DEL "%RegBackup%\HKCC.reg"
+REG export HKCC "%RegBackup%\HKCC.reg"
+IF EXIST "%RegBackup%\Backup.reg" DEL "%RegBackup%\Backup.reg"
+COPY "%RegBackup%\HKLM.reg"+"%RegBackup%\HKCU.reg"+"%RegBackup%\HKCR.reg"+"%RegBackup%\HKU.reg"+"%RegBackup%\HKCC.reg" "%RegBackup%\Backup.reg"
+DEL "%RegBackup%\HKLM.reg"
+DEL "%RegBackup%\HKCU.reg"
+DEL "%RegBackup%\HKCR.reg"
+DEL "%RegBackup%\HKU.reg"
+DEL "%RegBackup%\HKCC.reg"
+echo.
+echo Registry Backup completed! (found in C:>RegBckup)
+echo.
 echo integrating Zusier's Registry Tweak 
 echo.
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d "0" /f
@@ -228,13 +255,14 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f8
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /f
 powercfg -devicedisablewake "HID-compliant mouse"
 powercfg -devicedisablewake "HID keyboard Device"
-powercfg -setactive "de01174f-7fa8-4f81-8f82-bc6c84a39e47"
+powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+powercfg -attributes SUB_PROCESSOR 5d76a2ca-e8c0-402f-a133-2158492d58ad -ATTRIB_HIDE
 
 
 echo.
 echo.
 echo.
-echo Tweaking Steam priorities
+echo Tweaking Program Priorities
 echo.
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\gameoverlayui.exe\PerfOptions" /v CpuPriorityClass /t REG_DWORD /d 00000001 /f
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\gameoverlayui.exe\PerfOptions" /v IoPriority /t REG_DWORD /d 00000000 /f
@@ -242,6 +270,9 @@ reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execut
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamservice.exe\PerfOptions" /v IoPriority /t REG_DWORD /d 00000000 /f
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamwebhelper.exe\PerfOptions" /v CpuPriorityClass /t REG_DWORD /d 00000001 /f
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamwebhelper.exe\PerfOptions" /v IoPriority /t REG_DWORD /d 00000000 /f
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\FortniteClient-Win64-Shipping.exe\PerfOptions" /v "CpuPriorityClass" /t REG_DWORD /d "3" /f
+wmic process where name="javaw.exe" CALL setpriority "High"
+wmic process where name="GTA5.exe" CALL setpriority "High"
 echo.
 echo The Registry integration error level is %ErrorLevel%
 echo Finished!
@@ -825,12 +856,60 @@ reg.exe add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLog
 reg.exe add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /v "EnableVirtualizationBasedSecurity" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /v "HVCIMATRequired" /t REG_DWORD /d "0" /f
+REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreenCamera" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\15.0\osm" /v "enablefileobfuscation" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\15.0\osm" /v "enablelogging" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\15.0\osm" /v "enableupload" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\common" /v "qmenable" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\common" /v "sendcustomerdata" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\common" /v "updatereliabilitydata" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\common\feedback" /v "enabled" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\common\feedback" /v "includescreenshot" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\common\internet" /v "useonlinecontent" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\common\ptwatson" /v "ptwoptin" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm" /v "enablefileobfuscation" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm" /v "enablelogging" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm" /v "enableupload" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "accesssolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "olksolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "onenotesolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "pptsolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "projectsolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "publishersolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "visiosolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "wdsolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedapplications" /v "xlsolution" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedsolutiontypes" /v "agave" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedsolutiontypes" /v "appaddins" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedsolutiontypes" /v "comaddins" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedsolutiontypes" /v "documentfiles" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\osm\preventedsolutiontypes" /v "templatefiles" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\excel\security" /v "blockcontentexecutionfrominternet" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\outlook\security" /v "level" /t REG_DWORD /d 2 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\powerpoint\security" /v "blockcontentexecutionfrominternet" /t REG_DWORD /d 1 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\office\16.0\word\security" /v "blockcontentexecutionfrominternet" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype\ETW" /v "TraceLevelThreshold" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype" /v "EnableTracing" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype\ETW" /v "EnableTracing" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype" /v "WPPFilePath" /t REG_SZ /d "%%SYSTEMDRIVE%%\TEMP\Tracing\WPPMedia" /f
+REG ADD "HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype\ETW" /v "WPPFilePath" /t REG_SZ /d "%%SYSTEMDRIVE%%\TEMP\WPPMedia" /f
+echo.
+echo Adding Take Ownership to Context Menu
+REG ADD "HKCR\*\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
+REG ADD "HKCR\*\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
+REG ADD "HKCR\*\shell\runas" /v "NoWorkingDirectory" /t REG_SZ /d "" /f
+REG ADD "HKCR\*\shell\runas\command" /ve /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
+REG ADD "HKCR\*\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
+REG ADD "HKCR\Directory\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
+REG ADD "HKCR\Directory\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
+REG ADD "HKCR\Directory\shell\runas" /v "NoWorkingDirectory" /t REG_SZ /d "" /f
+REG ADD "HKCR\Directory\shell\runas\command" /ve /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
+REG ADD "HKCR\Directory\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
 
-
 echo.
 echo.
 echo.
-echo Finished prevention of Data Collection and Telemetry!
+echo Finished prevention of Data Collection and Telemetry! (privacy)
 echo.
 echo.
 echo.
@@ -905,8 +984,11 @@ if /I "%c%" EQU "N" goto :Hw23
 
 :ssd!
 fsutil behavior set disabledeletenotify 0
- 
+SET Prefetch=0
 :Hw23
+fsutil behavior set disabledeletenotify 1
+SET Prefetch=0
+:bcfuhdw
 set /P c=Would you like BCDedit tweaks? (Would reccomend as long as you have done your research).[Y/N]?
 if /I "%c%" EQU "Y" goto :bcdedit67
 if /I "%c%" EQU "N" goto :next766
