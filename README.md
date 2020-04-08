@@ -1,5 +1,5 @@
 # About
-Zusier's Optimization Batch File is made to give a perfect boost in performance, latency.
+Zusier's Optimization Batch File is made to give a perfect balance in performance, latency.
 
 # Is this safe? Why should I use it?
 
