@@ -1,5 +1,5 @@
 @echo off
-title Zusier's Batch - Performance and Optimization V5.0.1
+title Zusier's Batch - Performance and Optimization V5.1.5-Beta2
 color 5
 echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
@@ -14,7 +14,10 @@ echo ---------------------------------------------------------------------------
 
 echo Change Log
 echo .
-echo V5.1.5
+echo V5.1.5-Beta2
+echo - adds a couple disabled services
+echo - adds more dism commands that enable modules for stability
+echo V5.1.5-Beta0
 echo - Added Take OwnerShip to Context Menu
 echo - Blocks Camera on lockscreen
 echo - Multiple Privacy Tweaks
@@ -633,7 +636,7 @@ netsh int tcp set global timestamps=disabled
 netsh int tcp set global nonsackrttresiliency=disabled 
 netsh int tcp set global maxsynretransmissions=2 
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\QoS" /v "Tcp Autotuning Level" /t REG_SZ /d "Off" /f
-netsh int tcp set global ecncapability=enabled
+netsh int tcp set global ecncapability=disabled
 netsh int tcp set global fastopen=enabled 
 netsh int ip set global icmpredirects=disabled
 netsh int tcp set security mpp=disabled profiles=disabled
@@ -741,6 +744,13 @@ TASKKILL /t /f /im smartscreen.exe > NUL 2>&1
 TASKKILL /t /f /im GameBarPresenceWriter.exe > NUL 2>&1 
 TASKKILL /t /f /im mobsync.exe > NUL 2>&1 
 TASKKILL /t /f /im HelpPane.exe > NUL 2>&1 
+schtasks /change /disable /tn "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
+schtasks /change /disable /tn "\Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
+schtasks /change /disable /tn "\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
+schtasks /change /disable /tn "\Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector"
+schtasks /change /disable /tn "\Microsoft\Windows\MemoryDiagnostic\ProcessMemoryDiagnosticEvents"
+schtasks /change /disable /tn "\Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem"
+schtasks /change /disable /tn "\Microsoft\Windows\Windows Error Reporting\QueueReporting"
 del "%WinDir%\System32\smartscreen.exe" /s /f /q > NUL 2>&1
 del "%WinDir%\System32\GameBarPresenceWriter.exe" /s /f /q > NUL 2>&1
 del "%WinDir%\System32\mobsync.exe" /s /f /q > NUL 2>&1
@@ -1057,6 +1067,11 @@ cleanmgr /autoclean
 sfc /scannow
 dism /online /cleanup-image /startcomponentcleanup /resetbase /defer
 dism /Online /Cleanup-image /Restorehealth
+dism /online /enable-feature /featurename:LegacyComponents
+dism /online /enable-feature /featurename:NetFx3
+dism /online /enable-feature /featurename:DirectPlay
+dism /online /enable-feature /featurename:NetFx4-AdvSrvs
+
 diskperf -N
 echo.
 echo.
