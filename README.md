@@ -11,7 +11,7 @@ If you would like to join my Performance Server, [join here!](https://discord.gg
 # How do I use it?
 1. Go to [Releases](https://github.com/Zusier/Zusiers-optimization-Batch/releases) and download it
 2. Unzip Bat.zip 
-3. Run Zusier AIO.bat as admin (though it will prompt you if not anyway)
+3. Run Zusier AIO.bat as admin (though it will prompt you if you don't anyway)
 4. let it run and type Y or N when questions are asked
 5. Enjoy :)
 
