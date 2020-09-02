@@ -1,6 +1,9 @@
 @echo off
-title Zusier's Batch - Performance and Optimization V5.1.5-Beta2
 color 5
+echo. > log.txt
+cd /D "%~dp0"
+setlocal enabledelayedexpansion
+title Zusier's Batch - Performance and Optimization V6~Beta1
 echo ---------------------------------------------------------------------------------------------------
 echo 8888888888P                  d8b                       888888b.            888            888      
 echo       d88P                   Y8P                       888  "88b           888            888      
@@ -11,9 +14,14 @@ echo   d88P     888  888 "Y8888b. 888 88888888 888          888    888 .d888888 
 echo  d88P      Y88b 888      X88 888 Y8b.     888          888   d88P 888  888 Y88b. Y88b.    888  888 
 echo d8888888888 "Y88888  88888P' 888  "Y8888  888          8888888P"  "Y888888  "Y888 "Y8888P 888  888 
 echo ---------------------------------------------------------------------------------------------------
-
+echo Current Version: V6~B1 >> log.txt
 echo Change Log
 echo .
+echo V6~Beta1
+echo - Removed bloat tweaks like copying reg backups to clipboard
+echo - added debug log 
+echo V5.2
+echo -Changes PlatformTick to Yes for .5 timer
 echo V5.1.5-Beta2
 echo - adds a couple disabled services
 echo - adds more dism commands that enable modules for stability
@@ -75,8 +83,7 @@ echo -uses chkdsk to find more errors (need to run chkdsk /f after restart)
 echo -added Audl.exe (lowers sample rate of audio to decrease latency)
 echo -tweaked reg to include system animations
 echo -bat now runs sfc /scannow
-:: BatchGotAdmin
-:-------------------------------------
+:: BatchObtainAdmin
 REM  --> Check for permissions
 >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
 REM --> If error flag set, we do not have admin.
@@ -93,7 +100,6 @@ if '%errorlevel%' NEQ '0' (
     if exist "%temp%\getadmin.vbs" ( del "%temp%\getadmin.vbs" )
     pushd "%CD%"
     CD /D "%~dp0"
-:--------------------------------------
 echo.
 echo.
 echo.
@@ -104,15 +110,16 @@ echo.
 echo Would you like start now?
 pause
 echo.
+echo.
 Echo Attempting to create a system Restore Point
 
-Wmic.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "Before Zusiers Tweaks", 100, 12
+Wmic.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "Before Zusiers Tweaks", 100, 12 >> log.txt
 
 echo Restore Point Created!
 echo.
 echo.
 echo.
-echo Backing Up Registry...
+echo Backing Up Registry... (This may take awhile depending on if your windows is a fresh install or not)
 SETLOCAL
 SET RegBackup=%SYSTEMDRIVE%\RegBackup
 IF NOT EXIST "%RegBackup%" md "%RegBackup%"
@@ -127,142 +134,32 @@ REG export HKU "%RegBackup%\HKU.reg"
 IF EXIST "%RegBackup%\HKCC.reg" DEL "%RegBackup%\HKCC.reg"
 REG export HKCC "%RegBackup%\HKCC.reg"
 IF EXIST "%RegBackup%\Backup.reg" DEL "%RegBackup%\Backup.reg"
-COPY "%RegBackup%\HKLM.reg"+"%RegBackup%\HKCU.reg"+"%RegBackup%\HKCR.reg"+"%RegBackup%\HKU.reg"+"%RegBackup%\HKCC.reg" "%RegBackup%\Backup.reg"
-DEL "%RegBackup%\HKLM.reg"
-DEL "%RegBackup%\HKCU.reg"
-DEL "%RegBackup%\HKCR.reg"
-DEL "%RegBackup%\HKU.reg"
-DEL "%RegBackup%\HKCC.reg"
 echo.
 echo Registry Backup completed! (found in C:>RegBckup)
+echo starting log
+cd /D "%~dp0"
+setlocal enabledelayedexpansion
+powershell "Set-ExecutionPolicy -ExecutionPolicy Unrestricted" 
+cls
+echo Importing Revisions V2.8 Power Plan
+
+if exist "RevisionPowerPlanV2.8.pow" goto :okeydokey
+
+echo "power plan has not been found, please make sure its in the same folder as the batch!"
+pause
+exit
+
+:okeydokey
+echo Installing...
+echo.
+echo powercfg -import "%~dp0\RevisionPowerPlanV2.8.pow" >> log.txt
+echo.
+
+echo RevisionPowerPlanV2.8.pow has been installed, please activate it via "power options" - "additional plans"
 echo.
 echo integrating Zusier's Registry Tweak 
 echo.
-Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowDeviceNameInTelemetry" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableInstallerDetection" /t REG_DWORD /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "DisallowShaking" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "EnableBalloonTips" /t REG_DWORD /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoLowDiskSpaceChecks" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "LinkResolveIgnoreLinkInfo" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoResolveSearch" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoResolveTrack" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoInternetOpenWith" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoInstrumentation" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v "Max Cached Icons" /t REG_SZ /d "2500" /f
-Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\OneDrive" /v "DisableFileSyncNGSC" /t REG_DWORD /d "1" /f
-REG.exe add "HKLM\software\policies\microsoft\windows\skydrive" /v "disablefilesync" /t REG_DWORD /d "1" /f
-
-echo Win32Priority is being set to 28! If you have different thoughts on W32PS please change here (this is in decimal so use a converter!)
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "40" /f
-
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" /v "MaintenanceDisabled" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v "VisualFXSetting" /t REG_DWORD /d "3" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\AnimateMinMax" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ComboBoxAnimation" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ControlAnimations" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\CursorShadow" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DragFullWindows" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DropShadow" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DWMAeroPeekEnabled" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DWMEnabled" /v "DefaultApplied" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DWMSaveThumbnailEnabled" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\FontSmoothing" /v "DefaultApplied" /t REG_SZ /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ListBoxSmoothScrolling" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ListviewAlphaSelect" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ListviewShadow" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\MenuAnimation" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\SelectionFade" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TaskbarAnimations" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ThumbnailsOrIcon" /v "DefaultApplied" /t REG_SZ /d "1" /f
-Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TooltipAnimation" /v "DefaultApplied" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "value" /t REG_SZ /d "00000000" /f
-Reg.exe add "HKCU\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" /v "NoTileApplicationNotification" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\OneSyncSvc" /v "Start" /t REG_DWORD /d "4" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\OneSyncSvc_402ac" /v "Start" /t REG_DWORD /d "4" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\dmwappushservice" /v "Start" /t REG_DWORD /d "4" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "Start" /t REG_DWORD /d "4" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "ContentDeliveryAllowed" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "OemPreInstalledAppsEnabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "PreInstalledAppsEnabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "PreInstalledAppsEverEnabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SilentInstalledAppsEnabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SubscribedContent-338389Enabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SystemPaneSuggestionsEnabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SubscribedContent-338388Enabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "AppsUseLightTheme" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "SystemUsesLightTheme" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "BingSearchEnabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "DisableAntiSpyware" /t REG_SZ /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "DisableWebSearch" /t REG_SZ /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "AutoUpdateEnabled" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack" /v "EnableWebContentEvaluation" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" /v "DownloadMode" /t REG_DWORD /d "0" /f
-
-reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enableboottrace" /t reg_dword /d "0" /f
-reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enableprefetcher" /t reg_dword /d "0" /f
-reg.exe add "hklm\system\currentcontrolset\control\session manager\memory management\prefetchparameters" /v "enablesuperfetch" /t reg_dword /d "0" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "DisableAutomaticRestartSignOn" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "HiberbootEnabled" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableSuperfetch" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableBoottrace" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\System\CurrentControlSet\Services\VxD\BIOS" /v "CPUPriority" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\System\CurrentControlSet\Services\VxD\BIOS" /v "FastDRAM" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "LargeSystemCache" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f
-reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control" /v "SvcHostSplitThresholdInKB" /t REG_DWORD /d "%ram%" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "DisableTaskOffload" /t REG_DWORD /d "1" /f
-Reg.exe add "HKCU\Control Panel\Desktop" /v "AutoEndTasks" /t REG_SZ /d "1" /f
-Reg.exe add "HKCU\Control Panel\Desktop" /v "HungAppTimeout" /t REG_SZ /d "1000" /f
-Reg.exe add "HKCU\Control Panel\Desktop" /v "MenuShowDelay" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Control Panel\Desktop" /v "WaitToKillAppTimeout" /t REG_SZ /d "3000" /f
-Reg.exe add "HKCU\Control Panel\Desktop" /v "LowLevelHooksTimeout" /t REG_SZ /d "1000" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control" /v "WaitToKillServiceTimeout" /t REG_SZ /d "2000" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "perflevelsrc" /t reg_dword /d "0x00002222" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "powermizerenable" /t reg_dword /d "00000001" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "powermizerlevel" /t reg_dword /d "00000001" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "powermizerlevelac" /t reg_dword /d "00000001" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "enablecoreslowdown" /t reg_dword /d "00000000" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "enablemclkslowdown" /t reg_dword /d "00000000" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "enablenvclkslowdown" /t reg_dword /d "00000000" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" /v "StartupDelayInMSec" /t REG_DWORD /d "3" /f
-
-Reg.exe add "HKCU\Control Panel\Mouse" /v "MouseHoverTime" /t REG_SZ /d "0" /f
-Reg.exe add "HKCU\Control Panel\Mouse" /v "MouseSensitivity" /t REG_SZ /d "10" /f
-Reg.exe add "HKU\.DEFAULT\Control Panel\Mouse" /v "MouseSpeed" /t REG_SZ /d "0" /f
-Reg.exe add "HKU\.DEFAULT\Control Panel\Mouse" /v "MouseThreshold1" /t REG_SZ /d "0" /f
-Reg.exe add "HKU\.DEFAULT\Control Panel\Mouse" /v "MouseThreshold2" /t REG_SZ /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\mouhid\Parameters" /v "TreatAbsolutePointerAsAbsolute" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\mouhid\Parameters" /v "TreatAbsoluteAsRelative" /t REG_DWORD /d "0" /f
-
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_SZ /d "00000000" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_SZ /d "fffffff" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Background Only" /t REG_SZ /d "False" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Clock Rate" /t REG_DWORD /d "10000" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d "8" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Priority" /t REG_DWORD /d "6" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Scheduling Category" /t REG_SZ /d "High" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Latency Sensitive" /t REG_SZ /d "True" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "LocalPriority" /t REG_DWORD /d "4" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "HostsPriority" /t REG_DWORD /d "5" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "DnsPriority" /t REG_DWORD /d "6" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "NetbtPriority" /t REG_DWORD /d "7" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PerfLevelSrc" /t REG_DWORD /d "8738" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerEnable" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerLevel" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerLevelAC" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /f
-powercfg -devicedisablewake "HID-compliant mouse"
-powercfg -devicedisablewake "HID keyboard Device"
-powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-powercfg -attributes SUB_PROCESSOR 5d76a2ca-e8c0-402f-a133-2158492d58ad -ATTRIB_HIDE
-
-
-echo.
+reg import AIO.reg >> log.txt
 echo.
 echo.
 echo Tweaking Program Priorities
@@ -274,16 +171,17 @@ reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execut
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamwebhelper.exe\PerfOptions" /v CpuPriorityClass /t REG_DWORD /d 00000001 /f
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamwebhelper.exe\PerfOptions" /v IoPriority /t REG_DWORD /d 00000000 /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\FortniteClient-Win64-Shipping.exe\PerfOptions" /v "CpuPriorityClass" /t REG_DWORD /d "3" /f
-wmic process where name="javaw.exe" CALL setpriority "High"
-wmic process where name="GTA5.exe" CALL setpriority "High"
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\javaw.exe\PerfOptions" /v "CpuPriorityClass" /t REG_DWORD /d "3" /f
+Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\ShooterGame.exe\PerfOptions" /v "CpuPriorityClass" /t REG_DWORD /d "3" /f
+
 echo.
-echo The Registry integration error level is %ErrorLevel%
+echo The Registry integration error level is %ErrorLevel% >> log.txt
 echo Finished!
 
 echo.
 echo.
 echo.
-echo disabling some services temporarily and stopping cortana + other shit
+echo disabling some services temporarily and stopping cortana + other shit 
 echo.
 echo.
 echo.
@@ -325,7 +223,6 @@ sc config FontCache start= demand
 sc config CDPSvc start= demand
 sc config OneSyncSvc start= disabled
 sc config BcastDVRUserService start= disabled
-sc config WSearch start= disabled
 sc config TrkWks start= disabled
 sc config ShellHWDetection start= demand
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SharedAccess" /v Start /t REG_DWORD /d 00000004 /f
@@ -347,11 +244,11 @@ Echo.
 Echo.
 Echo.
 :optiz
-set /P c=Do you want to customize your services? Script segment created by OptiZ Script (This may overwrite the previous service tweak fix)[Y/N]?
+set /P c=Do you want to customize your services? Script segment created by OptiZ Script (This may overwrite the previous service tweak fix)[Y/N]? 
 if /I "%c%" EQU "Y" goto :next3000
 if /I "%c%" EQU "N" goto :no
 
-goto :next
+goto :next >> log.txt
 
 :next3000
 Echo. [101;41mDisable Microsoft Xbox?:[0m
@@ -359,10 +256,10 @@ Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
 Echo.
 SET /P choice=  [101;42mY / N:[0m  
-IF /I "%choice%"=="Y" goto apply
-IF /I "%choice%"=="N" goto next
+IF /I "%choice%"=="Y" goto :disablexbx
+IF /I "%choice%"=="N" goto :skipxbx
 Echo.
-:apply
+:disablexbx
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XboxNetApiSvc" /v "Start" /t REG_DWORD /d "4" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "value" /t REG_SZ /d "00000000" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t REG_SZ /d "0" /f
@@ -373,18 +270,18 @@ reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XboxGipSvc" /v "St
 Echo.
 Echo. [101;41mThe services has been disabled.[0m
 
-goto :next
+goto :skipxbx
 
-:next
+:skipxbx
 Echo. [101;41mDisable Telemetry and Diagnostics?:[0m
 Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
 Echo.
 SET /P choice=  [101;42mY / N:[0m  
-IF /I "%choice%"=="Y" goto apply
-IF /I "%choice%"=="N" goto next
+IF /I "%choice%"=="Y" goto :telemetry
+IF /I "%choice%"=="N" goto :skipdiag
 Echo.
-:apply
+:telemetry
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\DiagTrack" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\diagsvc" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\DPS" /v "Start" /t REG_DWORD /d "4" /f
@@ -400,18 +297,17 @@ reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\DsSvc" /v "Start" 
 Echo.
 Echo. [101;41mThe services has been disabled.[0m
 
-goto :next
-
-:next
+goto :skipdiag
+:skipdiag
 Echo. [101;41mDisable Windows Defender?:[0m
 Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
 Echo.
 SET /P choice=  [101;42mY / N:[0m  
-IF /I "%choice%"=="Y" goto apply
-IF /I "%choice%"=="N" goto next
+IF /I "%choice%"=="Y" goto :windef
+IF /I "%choice%"=="N" goto :skipav
 Echo.
-:apply
+:windef
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Sense" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WdNisSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WinDefend" /v "Start" /t REG_DWORD /d "4" /f
@@ -422,18 +318,18 @@ reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SecurityHealthServ
 Echo.
 Echo. [101;41mThe services has been disabled.[0m
 
-goto :next
+goto :skipav
 
-:next
+:skipav
 Echo. [101;41mDisable Windows Firewall?:[0m
 Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
 Echo.
 SET /P choice=  [101;42mY / N:[0m  
-IF /I "%choice%"=="Y" goto apply
-IF /I "%choice%"=="N" goto next
+IF /I "%choice%"=="Y" goto :fw
+IF /I "%choice%"=="N" goto :enfw
 Echo.
-:apply
+:fw
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\mpssvc" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\BFE" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile" /v "EnableFirewall" /t REG_DWORD /d 00000000 /f
@@ -445,18 +341,18 @@ reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SharedAccess\Param
 Echo.
 Echo. [101;41mThe services has been disabled.[0m
 
-goto :next
+goto :enfw
 
-:next
+:enfw
 Echo. [101;41mDisable Hyper-V?:[0m
 Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
 Echo.
 SET /P choice=  [101;42mY / N:[0m  
-IF /I "%choice%"=="Y" goto apply
-IF /I "%choice%"=="N" goto next
+IF /I "%choice%"=="Y" goto :virtual
+IF /I "%choice%"=="N" goto :skiphv
 Echo.
-:apply
+:virtual
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\HvHost" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vmickvpexchange" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vmicguestinterface" /v "Start" /t REG_DWORD /d "4" /f
@@ -469,36 +365,36 @@ reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vmicvss" /v "Start
 Echo.
 Echo. [101;41mThe services has been disabled.[0m
 
-goto :next
+goto :skiphv
 
-:next
+:skiphv
 Echo. [101;41mDisable Windows Error Reporting and Windows Push Notifications?:[0m
 Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
 Echo.
 SET /P choice=  [101;42mY / N:[0m  
-IF /I "%choice%"=="Y" goto apply
-IF /I "%choice%"=="N" goto next
+IF /I "%choice%"=="Y" goto :err
+IF /I "%choice%"=="N" goto :erskip
 Echo.
-:apply
+:err
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WerSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WpnService" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WpnUserService" /v "Start" /t REG_DWORD /d "4" /f
 Echo.
 Echo. [101;41mThe services has been disabled.[0m
 
-goto :next
+goto :erskip
 
-:next
+:erskip
 Echo. [101;41mDisable Remote Desktop?:[0m
 Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
 Echo.
 SET /P choice=  [101;42mY / N:[0m  
-IF /I "%choice%"=="Y" goto apply
-IF /I "%choice%"=="N" goto next
+IF /I "%choice%"=="Y" goto :rdp
+IF /I "%choice%"=="N" goto :srdp
 Echo.
-:apply
+:rdp
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\RasMan" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\TermService" /v "Start" /t REG_DWORD /d "4" /f
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\UmRdpService" /v "Start" /t REG_DWORD /d "4" /f
@@ -507,15 +403,15 @@ reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\RpcLocator" /v "St
 Echo.
 Echo. [101;41mThe services has been disabled.[0m
 
-goto :next
+goto :srdp
 
-:next
+:srdp
 Echo. [101;41mDisable Print?:[0m
 Echo. Press "Y" to apply.
 Echo. Press "N" to skip.
 Echo.
 SET /P choice=  [101;42mY / N:[0m  
-IF /I "%choice%"=="Y" goto apply
+IF /I "%choice%"=="Y" goto :print
 IF /I "%choice%"=="N" goto next
 Echo.
 :apply
@@ -575,7 +471,6 @@ Echo.
 Echo.
 :next3
 echo Network optimization begins
-Set-NetAdapterRSS -Name "Ethernet" -BaseProcessorNumber 1
 ipconfig /release
 ipconfig /renew
 ipconfig /flushdns
@@ -585,7 +480,7 @@ netsh int ip reset
 netsh int tcp reset  
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_SZ /d "fffffff" /f
 netsh int tcp set supplemental internet congestionprovider=ctcp
-Powershell.exe Set-NetTCPSetting -SettingName internet -AutoTuningLevelLocal normal
+netsh winsock set autotuning on
 Powershell.exe Set-NetTCPSetting -SettingName internet -ScalingHeuristics disabled
 powershell.exe Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing enabled
 powershell.exe Set-NetOffloadGlobalSetting -ReceiveSideScaling enabled
@@ -649,7 +544,7 @@ Echo.
 echo The next process will start soon...
 
  
-set /P c=Do you use wifi? (DONT USE IF ETHERNET) This tries to fix a problem with wifi users. (Hard to troubleshoot because I use ethernet :p) [Y/N]?
+set /P c=Do you use wifi? (DONT USE IF ETHERNET) This tries to fix a problem with wifi users. (Hard to troubleshoot because I only use ethernet :p) [Y/N]?
 if /I "%c%" EQU "Y" goto :WifiFix
 if /I "%c%" EQU "N" goto :next98367
  
@@ -930,6 +825,82 @@ if /I "%c%" EQU "N" goto :gpucpuetx
 :melody
 powershell Set-ProcessMitigation -System -Disable DEP,EmulateAtlThunks,ForceRelocateImages,RequireInfo,BottomUp,HighEntropy,StrictHandle,DisableWin32kSystemCalls,AuditSystemCall,DisableExtensionPoints,BlockDynamicCode,AllowThreadsToOptOut,AuditDynamicCode,CFG,SuppressExports,StrictCFG,MicrosoftSignedOnly,AllowStoreSignedBinaries,AuditMicrosoftSigned,AuditStoreSigned,EnforceModuleDependencySigning,DisableNonSystemFonts,AuditFont,BlockRemoteImageLoads,BlockLowLabelImageLoads,PreferSystem32,AuditRemoteImageLoads,AuditLowLabelImageLoads,AuditPreferSystem32,EnableExportAddressFilter,AuditEnableExportAddressFilter,EnableExportAddressFilterPlus,AuditEnableExportAddressFilterPlus,EnableImportAddressFilter,AuditEnableImportAddressFilter,EnableRopStackPivot,AuditEnableRopStackPivot,EnableRopCallerCheck,AuditEnableRopCallerCheck,EnableRopSimExec,AuditEnableRopSimExec,SEHOP,AuditSEHOP,SEHOPTelemetry,TerminateOnError,DisallowChildProcessCreation,AuditChildProcess
 powershell Disable-MMAgent -MemoryCompression -ApplicationPreLaunch
+echo Disabling process mitigations...
+powershell "ForEach($v in (Get-Command -Name \"Set-ProcessMitigation\").Parameters[\"Disable\"].Attributes.ValidValues){Set-ProcessMitigation -System -Disable $v.ToString().Replace(\" \", \"\").Replace(\"`n\", \"\") -ErrorAction SilentlyContinue}" 
+
+if %errorlevel% neq 0 (
+	echo WARNING: Failed to set Process Mitigations.
+	echo Please NOW open Windows Defender and disable all process mitigations in Exploit Protection
+	echo or you won't be able to use Windows on reboot.
+	echo We will continue when you're done.
+	echo If you're using Windows 7, Windows 8, Windows 8.1 or respective versions of Windows Server ^(2008 R2, 2012, 2012 R2^) then you can safely ignore this error and continue.
+	"%~dp0\data\showdialog.exe" ERROR "Failed to set Process Mitigations. Please NOW open Windows Defender and disable all process mitigations in Exploit Protection or you won't be able to use Windows on reboot. We will continue when you're done."
+	pause
+)
+echo Removing Kernel Blacklist...
+reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\BlockList\Kernel" /va /reg:64 /f 
+echo.
+echo Disabling TCP bloat...
+netsh int tcp set security mpp=disabled profiles=disabled 
+if %errorlevel% neq 0 (
+	echo WARNING: Failed to disable TCP bloat. Please check me_log.txt for details.
+	pause
+)
+echo Setting Heuristics TCP parameters...
+netsh int tcp set heur forcews=disable 
+if %errorlevel% neq 0 (
+	echo WARNING: Failed to set Heuristics TCP parameters. Please check me_log.txt for details.
+	pause
+)
+echo Disabling Advanced Firewall...
+netsh advfirewall set allprofiles state off 
+if %errorlevel% neq 0 (
+	echo WARNING: Failed to disable Advanced Firewall. Please check me_log.txt for details.
+	pause
+)
+
+echo Disabling Net Adapter QoS...
+powershell "Disable-NetAdapterQos -Name \"*\"" -ErrorAction SilentlyContinue 
+echo Disabling Net Adapter Power Management...
+powershell "Disable-NetAdapterPowerManagement -Name \"*\"" -ErrorAction SilentlyContinue 
+echo Enabling Net Adapter Checksum Offload...
+powershell "Enable-NetAdapterChecksumOffload -Name \"*\"" -ErrorAction SilentlyContinue 
+echo Disabling Net Adapter Encapsulated Packet Task Offload...
+powershell "Disable-NetAdapterEncapsulatedPacketTaskOffload -Name \"*\"" -ErrorAction SilentlyContinue 
+echo Enabling Net Adapter IPsec Offload...
+powershell "Enable-NetAdapterIPsecOffload -Name \"*\"" -ErrorAction SilentlyContinue 
+echo Disabling Net Adapter Large Send Offload...
+powershell "Disable-NetAdapterLso -Name \"*\"" -ErrorAction SilentlyContinue 
+echo Enabling Net Adapter Packet Direct...
+powershell "Enable-NetAdapterPacketDirect -Name \"*\"" -ErrorAction SilentlyContinue 
+echo Disabling Net Adapter Receive Side Coalescing...
+powershell "Disable-NetAdapterRsc -Name \"*\"" -ErrorAction SilentlyContinue 
+echo Enabling Net Adapter Receive Side Scaling...
+powershell "Enable-NetAdapterRss -Name \"*\"" -ErrorAction SilentlyContinue 
+
+echo Checking IP Helper...
+net start iphlpsvc 
+echo Checking Teredo...
+powershell "Set-NetTeredoConfiguration -Type natawareclient -ErrorAction SilentlyContinue" 
+netsh int teredo set state natawareclient 
+if %errorlevel% neq 0 (
+	powershell "Set-NetTeredoConfiguration -Type client -ErrorAction SilentlyContinue" 
+	netsh int teredo set state client 
+)
+echo Setting Teredo Server...
+powershell "Set-NetTeredoConfiguration -ServerName \"win1910.ipv6.microsoft.com\" -ErrorAction SilentlyContinue" 
+netsh int teredo set state servername="win1910.ipv6.microsoft.com" 
+echo Enabling URO ^(might fail cause not supported in all systems^)...
+netsh int udp set global uro=enabled 
+
+echo Removing Security Health Startup Item...
+reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "SecurityHealth" /f 
+echo Enabling Fastopen...
+netsh int tcp set global fastopen=enable 
+if %errorlevel% neq 0 (
+	echo WARNING: Failed to enable Fastopen. Please check me_log.txt for details.
+	pause
+)
 
 :gpucpuetx
 echo Tweaking GPU, CPU, power and other Processes
@@ -966,7 +937,6 @@ Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\System
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Scheduling Category" /t REG_SZ /d "High" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "CsEnabled" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "PerfCalculateActualUtilization" /t REG_DWORD /d "0" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "SleepReliabilityDetailedDiagnostics" /t REG_DWORD /d "0" /f
@@ -994,11 +964,11 @@ if /I "%c%" EQU "Y" goto :ssd!
 if /I "%c%" EQU "N" goto :Hw23
 
 :ssd!
-fsutil behavior set disabledeletenotify 0
-SET Prefetch=0
+fsutil behavior set disabledeletenotify 0 
+SET Prefetch=0 
 :Hw23
-fsutil behavior set disabledeletenotify 1
-SET Prefetch=0
+fsutil behavior set disabledeletenotify 1 
+SET Prefetch=0 
 :bcfuhdw
 set /P c=Would you like BCDedit tweaks? (Would reccomend as long as you have done your research).[Y/N]?
 if /I "%c%" EQU "Y" goto :bcdedit67
@@ -1007,25 +977,41 @@ if /I "%c%" EQU "N" goto :next766
 echo.
 :bcdedit67
 echo.
-bcdedit /set useplatformclock No
-bcdedit /set useplatformtick No
-bcdedit /set disabledynamictick Yes
-bcdedit /set bootmenupolicy Legacy
-bcdedit /set debug No
-bcdedit /set isolatedcontext No
-bcdedit /set pae ForceEnable
-bcdedit /set bootux disabled
-bcdedit /set sos Yes
-bcdedit /set ems No
-bcdedit /set hypervisorlaunchtype off
-bcdedit /set nx optout
-bcdedit /set quietboot yes
-bcdedit /timeout 3
-bcdedit /set uselegacyapicmode no
-bcdedit /set usefirmwarepcisettings No
-bcdedit /set tscsyncpolicy Enhanced
-bcdedit /set x2apicpolicy Enable
-bcdedit /set usephysicaldestination No
+bcdedit /set allowedinmemorysettings 0 
+bcdedit /set useplatformclock No 
+bcdedit /set useplatformtick No 
+bcdedit /set tscsyncpolicy Enhanced 
+bcdedit /set debug No 
+bcdedit /set isolatedcontext No 
+bcdedit /set pae ForceEnable 
+bcdedit /set bootmenupolicy Legacy 
+bcdedit /set usefirmwarepcisettings No 
+bcdedit /set sos Yes 
+bcdedit /set disabledynamictick Yes 
+bcdedit /set disableelamdrivers Yes 
+bcdedit /set quietboot Yes 
+bcdedit /set x2apicpolicy Enable 
+bcdedit /set vsmlaunchtype Off 
+bcdedit /set usephysicaldestination No 
+bcdedit /set ems No 
+bcdedit /set firstmegabytepolicy UseAll 
+bcdedit /set configaccesspolicy Default 
+bcdedit /set linearaddress57 optin 
+bcdedit /set noumex Yes 
+bcdedit /set bootems No 
+bcdedit /set graphicsmodedisabled No 
+bcdedit /set extendedinput Yes 
+bcdedit /set highestmode Yes 
+bcdedit /set forcefipscrypto No 
+bcdedit /set perfmem 0 
+bcdedit /set clustermodeaddressing 1 
+bcdedit /set configflags 0 
+bcdedit /set uselegacyapicmode No 
+bcdedit /set onecpu No 
+bcdedit /set halbreakpoint No 
+bcdedit /set forcelegacyplatform No 
+bcdedit /set linearaddress57 OptOut
+bcdedit /set increaseuserva 268435328
 echo.
 echo.
 echo.
@@ -1060,19 +1046,34 @@ md %WinDir%\Prefetch
 md %Temp%
 md %AppData%\temp
 md %HomePath%\AppData\LocalLow\temp
+rd /s /q C:\$RECYCLE.BIN
+rd /s /q F:\$RECYCLE.BIN
+rd /s /q D:\$RECYCLE.BIN
+rd /s /q G:\$RECYCLE.BIN
+rd /s /q J:\$RECYCLE.BIN
+rd /s /q X:\$RECYCLE.BIN
+rd /s /q Z:\$RECYCLE.BIN
 echo.
+cls
 echo Temp Clean Finished!
-
+echo.
+echo Defragging Search Index
+sc config wsearch start=disabled
+net stop wsearch
+esentutl /d "C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows.edb"
+sc config wsearch start=delayed-auto
+net start wsearch
+echo. Search Defrag finished!
 echo Checking System Integrity and Repairs. This may take long
 cleanmgr /autoclean
 sfc /scannow
+echo Performing a routine check on your disk...
+chkdsk /forceofflinefix /scan 
 dism /online /cleanup-image /startcomponentcleanup /resetbase /defer
+dism /online /enable-feature /featurename:NetFx4-AdvSrvs /all /norestart 
+dism /online /enable-feature /featurename:NetFx3 /all /norestart 
+dism /online /enable-feature /featurename:DirectPlay /all /norestart 
 dism /Online /Cleanup-image /Restorehealth
-dism /online /enable-feature /featurename:LegacyComponents
-dism /online /enable-feature /featurename:NetFx3
-dism /online /enable-feature /featurename:DirectPlay
-dism /online /enable-feature /featurename:NetFx4-AdvSrvs
-
 diskperf -N
 echo.
 echo.
