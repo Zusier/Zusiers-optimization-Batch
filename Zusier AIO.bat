@@ -575,6 +575,7 @@ Echo.
 Echo.
 :next3
 echo Network optimization begins
+Set-NetAdapterRSS -Name "Ethernet" -BaseProcessorNumber 1
 ipconfig /release
 ipconfig /renew
 ipconfig /flushdns
