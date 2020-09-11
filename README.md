@@ -1,5 +1,4 @@
-# PLEASE DO NOT USE IF YOU USE A LAPTOP OR WIFI (wifi will be fixed in future update)
-
+# PLEASE DO NOT USE AT THIS POINT IN TIME
 # About
 Zusier's Optimization Batch File is made to give a perfect balance in performance, latency.
 
