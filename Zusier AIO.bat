@@ -14,6 +14,13 @@ echo ---------------------------------------------------------------------------
 
 echo Change Log
 echo .
+echo 6.0.1
+echo - remove tcp no delay as regedit value is device specific
+echo - remove mtu values(suspect of breaking wifi)
+echo 6.0.0 Compatibility Update
+echo - don't remove smartscreen unless told
+echo - rewording/grammar
+echo - remove Win32PrioritySeparation tweak
 echo V5.1.5-Beta2
 echo - adds a couple disabled services
 echo - adds more dism commands that enable modules for stability
@@ -112,7 +119,7 @@ echo Restore Point Created!
 echo.
 echo.
 echo.
-echo Backing Up Registry...
+echo Backing Up Registry to C:\RegBackup
 SETLOCAL
 SET RegBackup=%SYSTEMDRIVE%\RegBackup
 IF NOT EXIST "%RegBackup%" md "%RegBackup%"
@@ -134,7 +141,7 @@ DEL "%RegBackup%\HKCR.reg"
 DEL "%RegBackup%\HKU.reg"
 DEL "%RegBackup%\HKCC.reg"
 echo.
-echo Registry Backup completed! (found in C:>RegBckup)
+echo Registry Backup completed! (found in C:>RegBackup)
 echo.
 echo integrating Zusier's Registry Tweak 
 echo.
@@ -152,9 +159,6 @@ Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v "Max Cached Icons" /t REG_SZ /d "2500" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\OneDrive" /v "DisableFileSyncNGSC" /t REG_DWORD /d "1" /f
 REG.exe add "HKLM\software\policies\microsoft\windows\skydrive" /v "disablefilesync" /t REG_DWORD /d "1" /f
-
-echo Win32Priority is being set to 28! If you have different thoughts on W32PS please change here (this is in decimal so use a converter!)
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "40" /f
 
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" /v "MaintenanceDisabled" /t REG_DWORD /d "1" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v "VisualFXSetting" /t REG_DWORD /d "3" /f
@@ -221,13 +225,6 @@ Reg.exe add "HKCU\Control Panel\Desktop" /v "MenuShowDelay" /t REG_SZ /d "0" /f
 Reg.exe add "HKCU\Control Panel\Desktop" /v "WaitToKillAppTimeout" /t REG_SZ /d "3000" /f
 Reg.exe add "HKCU\Control Panel\Desktop" /v "LowLevelHooksTimeout" /t REG_SZ /d "1000" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control" /v "WaitToKillServiceTimeout" /t REG_SZ /d "2000" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "perflevelsrc" /t reg_dword /d "0x00002222" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "powermizerenable" /t reg_dword /d "00000001" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "powermizerlevel" /t reg_dword /d "00000001" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "powermizerlevelac" /t reg_dword /d "00000001" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "enablecoreslowdown" /t reg_dword /d "00000000" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "enablemclkslowdown" /t reg_dword /d "00000000" /f
-reg.exe add "hklm\system\currentcontrolset\control\class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "enablenvclkslowdown" /t reg_dword /d "00000000" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" /v "StartupDelayInMSec" /t REG_DWORD /d "3" /f
 
 Reg.exe add "HKCU\Control Panel\Mouse" /v "MouseHoverTime" /t REG_SZ /d "0" /f
@@ -251,39 +248,13 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "L
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "HostsPriority" /t REG_DWORD /d "5" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "DnsPriority" /t REG_DWORD /d "6" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /v "NetbtPriority" /t REG_DWORD /d "7" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PerfLevelSrc" /t REG_DWORD /d "8738" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerEnable" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerLevel" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{de01174f-7fa8-4f81-8f82-bc6c84a39e47}\0000" /v "PowerMizerLevelAC" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /f
+Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
 powercfg -devicedisablewake "HID-compliant mouse"
 powercfg -devicedisablewake "HID keyboard Device"
-powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-powercfg -attributes SUB_PROCESSOR 5d76a2ca-e8c0-402f-a133-2158492d58ad -ATTRIB_HIDE
-
-
 echo.
 echo.
 echo.
-echo Tweaking Program Priorities
-echo.
-reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\gameoverlayui.exe\PerfOptions" /v CpuPriorityClass /t REG_DWORD /d 00000001 /f
-reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\gameoverlayui.exe\PerfOptions" /v IoPriority /t REG_DWORD /d 00000000 /f
-reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamservice.exe\PerfOptions" /v CpuPriorityClass /t REG_DWORD /d 00000001 /f
-reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamservice.exe\PerfOptions" /v IoPriority /t REG_DWORD /d 00000000 /f
-reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamwebhelper.exe\PerfOptions" /v CpuPriorityClass /t REG_DWORD /d 00000001 /f
-reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\steamwebhelper.exe\PerfOptions" /v IoPriority /t REG_DWORD /d 00000000 /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\FortniteClient-Win64-Shipping.exe\PerfOptions" /v "CpuPriorityClass" /t REG_DWORD /d "3" /f
-wmic process where name="javaw.exe" CALL setpriority "High"
-wmic process where name="GTA5.exe" CALL setpriority "High"
-echo.
-echo The Registry integration error level is %ErrorLevel%
-echo Finished!
-
-echo.
-echo.
-echo.
-echo disabling some services temporarily and stopping cortana + other shit
+echo increasing privacy
 echo.
 echo.
 echo.
@@ -325,7 +296,6 @@ sc config FontCache start= demand
 sc config CDPSvc start= demand
 sc config OneSyncSvc start= disabled
 sc config BcastDVRUserService start= disabled
-sc config WSearch start= disabled
 sc config TrkWks start= disabled
 sc config ShellHWDetection start= demand
 reg.exe add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SharedAccess" /v Start /t REG_DWORD /d 00000004 /f
@@ -568,23 +538,14 @@ Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehaviorMode" /t REG_DW
 Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_HonorUserFSEBehaviorMode" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_DXGIHonorFSEWindowsCompatible" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\System\GameConfigStore" /v "GameDVR_EFSEFeatureFlags" /t REG_DWORD /d "0" /f
-echo The Registry integration error level is %ErrorLevel%
 echo FSO disabled attempt successful!
 Echo.
 Echo.
 Echo.
 :next3
 echo Network optimization begins
-Set-NetAdapterRSS -Name "Ethernet" -BaseProcessorNumber 1
-ipconfig /release
-ipconfig /renew
 ipconfig /flushdns
-netsh winsock reset catalog 
-netsh winsock reset 
-netsh int ip reset 
-netsh int tcp reset  
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_SZ /d "fffffff" /f
-netsh int tcp set supplemental internet congestionprovider=ctcp
 Powershell.exe Set-NetTCPSetting -SettingName internet -AutoTuningLevelLocal normal
 Powershell.exe Set-NetTCPSetting -SettingName internet -ScalingHeuristics disabled
 powershell.exe Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing enabled
@@ -596,20 +557,12 @@ powershell.exe Set-NetTCPSetting -SettingName internet -MaxSynRetransmissions 2
 powershell.exe Set-NetTCPSetting -SettingName internet -NonSackRttResiliency disabled
 powershell.exe Set-NetTCPSetting -SettingName internet -InitialRto 2000
 powershell.exe Set-NetTCPSetting -SettingName internet -MinRto 300
-netsh interface ipv4 add dnsserver "Local Area Connection" 1.1.1.1
-netsh interface ipv6 add dnsserver "Local Area Connection" 2606:4700:4700::1111
-netsh interface ipv4 add dnsserver "Wireless Network Connection" 1.0.0.1
-netsh interface ipv6 add dnsserver "Wireless Network Connection" 2606:4700:4700::1001
-netsh interface ipv4 set subinterface "Ethernet" mtu=1500 store=persistent
-netsh interface ipv6 set subinterface "Ethernet" mtu=1500 store=persistent
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "MaxUserPort" /t REG_DWORD /d "65534" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "DisableTaskOffload" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "TCPTimedWaitDelay" /t REG_DWORD /d "30" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "EnablePMTUDiscovery" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "EnablePMTUBHDetect" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "DefaultTTL" /t REG_DWORD /d "64" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{0A21087F-330E-485C-8E14-994C1F397879}" /v "TCPDelackTicks" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{0A21087F-330E-485C-8E14-994C1F397879}" /v "TCPNoDelay" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" /v "explorer.exe" /t REG_DWORD /d "10" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" /v "iexplore.exe" /t REG_DWORD /d "10" /f
 Reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Psched" /v "NonBestEffortLimit" /t REG_DWORD /d "0" /f
@@ -629,7 +582,7 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "FastSe
 Reg.exe add "HKLM\SOFTWARE\Microsoft\MSMQ\Parameters" /v "TCPNoDelay" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\services\NetBT" /v "Start" /t REG_DWORD /d "2" /f
 netsh int ip set global taskoffload=disabled 
-netsh int tcp set heuristics disabled 
+netsh int tcp set heuristics=disabled 
 netsh int tcp set global rss=enabled 
 netsh int tcp show global
 netsh int tcp set global rsc=disabled 
@@ -676,7 +629,7 @@ netsh interface set interface name="Wireless Network Connection" admin=ENABLED
 :next98367
 echo.
  
-set /P c=Do you want to lower latency? (disables dynamic tick etc, platform tick etc.)[Y/N]?
+set /P c=Do you want to lower latency? (disables dynamic tick, platform tick etc.)[Y/N]?
 if /I "%c%" EQU "Y" goto :tick100
 if /I "%c%" EQU "N" goto :next45
  
@@ -723,7 +676,7 @@ echo Debloating useless packages (This may take some time. errors occur when pac
 echo.
 echo.
 echo.
-echo Preventing Data Collection and Telemetry 
+echo Blocking Data Collection and Telemetry 
 Echo.
 Echo.
 Echo.
@@ -733,15 +686,12 @@ sc config DiagTrack start= disabled
 sc delete DiagTrack
 sc config diagnosticshub.standardcollector.service start= disabled
 net stop diagnosticshub.standardcollector.service > NUL 2>&1
-takeown /f "%WinDir%\System32\smartscreen.exe" /a
-icacls "%WinDir%\System32\smartscreen.exe" /grant:r Administrators:F /c
 takeown /f "%WinDir%\System32\GameBarPresenceWriter.exe" /a
 icacls "%WinDir%\System32\GameBarPresenceWriter.exe" /grant:r Administrators:F /c
 takeown /f "%WinDir%\System32\mobsync.exe" /a
 icacls "%WinDir%\System32\mobsync.exe" /grant:r Administrators:F /c
 takeown /f "%WinDir%\System32\HelpPane.exe" /a
 icacls "%WinDir%\System32\HelpPane.exe" /grant:r Administrators:F /c
-TASKKILL /t /f /im smartscreen.exe > NUL 2>&1 
 TASKKILL /t /f /im GameBarPresenceWriter.exe > NUL 2>&1 
 TASKKILL /t /f /im mobsync.exe > NUL 2>&1 
 TASKKILL /t /f /im HelpPane.exe > NUL 2>&1 
@@ -752,7 +702,6 @@ schtasks /change /disable /tn "\Microsoft\Windows\DiskDiagnostic\Microsoft-Windo
 schtasks /change /disable /tn "\Microsoft\Windows\MemoryDiagnostic\ProcessMemoryDiagnosticEvents"
 schtasks /change /disable /tn "\Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem"
 schtasks /change /disable /tn "\Microsoft\Windows\Windows Error Reporting\QueueReporting"
-del "%WinDir%\System32\smartscreen.exe" /s /f /q > NUL 2>&1
 del "%WinDir%\System32\GameBarPresenceWriter.exe" /s /f /q > NUL 2>&1
 del "%WinDir%\System32\mobsync.exe" /s /f /q > NUL 2>&1
 del "%WinDir%\System32\HelpPane.exe" /s /f /q > NUL 2>&1
@@ -762,7 +711,6 @@ del "c:\windows\system32\mcupdate_genuineintel.dll" /s /f /q
 del "c:\windows\system32\mcupdate_authenticamd.dll" /s /f /q
 Echo y| Reg.exe delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "NvBackend" > NUL
 Echo.
-Echo. smartscreen.exe Deleted
 Echo.
 Echo. GameBarPresenceWriter.exe Deleted
 Echo.
@@ -975,8 +923,6 @@ Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "QosManagesIdleProc
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "DisableVsyncLatencyUpdate" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "DisableSensorWatchdog" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "ExitLatencyCheckEnabled" /t REG_DWORD /d "0" /f
-Reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
-Reg.exe add "HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorMagnetism" /v "MagnetismUpdateIntervalInMilliseconds" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed" /v "CursorUpdateInterval" /t REG_DWORD /d "1" /f
 Reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability" /v "TimeStampInterval" /t REG_DWORD /d "0" /f
 Reg.exe add "HKCU\Software\Microsoft\Windows\DWM" /v "CompositionPolicy" /t REG_DWORD /d "0" /f
@@ -1000,7 +946,7 @@ SET Prefetch=0
 fsutil behavior set disabledeletenotify 1
 SET Prefetch=0
 :bcfuhdw
-set /P c=Would you like BCDedit tweaks? (Would reccomend as long as you have done your research).[Y/N]?
+set /P c=Would you like BCDedit tweaks? (Would reccomend as long as you have looked through them and agree/changed them).[Y/N]?
 if /I "%c%" EQU "Y" goto :bcdedit67
 if /I "%c%" EQU "N" goto :next766
  
@@ -1020,7 +966,6 @@ bcdedit /set ems No
 bcdedit /set hypervisorlaunchtype off
 bcdedit /set nx optout
 bcdedit /set quietboot yes
-bcdedit /timeout 3
 bcdedit /set uselegacyapicmode no
 bcdedit /set usefirmwarepcisettings No
 bcdedit /set tscsyncpolicy Enhanced
@@ -1039,27 +984,16 @@ echo Cleaning temp
 echo.
 del /s /f /q c:\windows\temp\*.*
 rd /s /q c:\windows\temp
-md c:\windows\temp
 del /s /f /q C:\WINDOWS\Prefetch
 del /s /f /q %temp%\*.*
-rd /s /q %temp%
-md %temp%
 del c:\WIN386.SWP
 del /s /f /q %WinDir%\temp\*.*
-del /s /f /q %WinDir%\Prefetch\*.*
-del /s /f /q %Temp%\*.*
-del /s /f /q %AppData%\temp\*.*
 del /s /f /q %HomePath%\AppData\LocalLow\temp\*.*
 rd /s /q %WinDir%\temp
 rd /s /q %WinDir%\Prefetch
 rd /s /q %Temp%
 rd /s /q %AppData%\temp
 rd /s /q %HomePath%\AppData\LocalLow\temp
-md %WinDir%\temp
-md %WinDir%\Prefetch
-md %Temp%
-md %AppData%\temp
-md %HomePath%\AppData\LocalLow\temp
 echo.
 echo Temp Clean Finished!
 
@@ -1080,7 +1014,7 @@ echo.
 echo ------------------------------------------------------
 echo Process Complete! RESTART YOUR COMPUTER :)
 echo 
-echo Created with blood, sweat and tears by Zusier (Zusier#0834 on Discord)
+echo Created with blood, sweat and tears by Zusier (Zusier#0001 on Discord)
 PAUSE
 echo.
 exit
