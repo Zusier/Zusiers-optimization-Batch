@@ -1,4 +1,3 @@
-# PLEASE DO NOT USE AT THIS POINT IN TIME
 # About
 Zusier's Optimization Batch File is made to give a perfect balance in performance, latency.
 
