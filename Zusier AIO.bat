@@ -752,34 +752,88 @@ echo Then next process will begin soon...
 :next45
 
 echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
+echo [                             0%                           ]
 @powershell "Get-AppxPackage *3dbuilder* | Remove-AppxPackage"
+cls
+echo [==                           3.5%                         ]
 @powershell "Get-AppxPackage *sway* | Remove-AppxPackage"
+cls
+echo [====                         7.0%                         ]
 @powershell "Get-AppxPackage *messaging* | Remove-AppxPackage"
+cls
+echo [=====                       10.5%                         ]
 @powershell "Get-AppxPackage *zunemusic* | Remove-AppxPackage"
+cls
+echo [======                      14.5%                         ]
 @powershell "Get-AppxPackage *windowsalarms* | Remove-AppxPackage"
+cls
+echo [========                    18.0%                         ]
 @powershell "Get-AppxPackage *officehub* | Remove-AppxPackage"
+cls
+echo [==========                  21.5%                         ]
 @powershell "Get-AppxPackage *skypeapp* | Remove-AppxPackage"
+cls
+echo [============                24.5%                         ]
 @powershell "Get-AppxPackage *getstarted* | Remove-AppxPackage"
+cls
+echo [==============              27.0%                         ]
 @powershell "Get-AppxPackage *windowsmaps* | Remove-AppxPackage"
+cls
+echo [==================          30.5%                         ]
 @powershell "Get-AppxPackage *solitairecollection* | Remove-AppxPackage"
+cls
+echo [====================        34.0%                         ]
 @powershell "Get-AppxPackage *bingfinance* | Remove-AppxPackage"
+cls
+echo [======================      37.5%                         ]
 @powershell "Get-AppxPackage *zunevideo* | Remove-AppxPackage"
+cls
+echo [========================    40.0%                         ]
 @powershell "Get-AppxPackage *bingnews* | Remove-AppxPackage"
+cls
+echo [=========================  43.5%                          ]
 @powershell "Get-AppxPackage *people* | Remove-AppxPackage"
+cls
+echo [=========================== 47.0%                         ]
 @powershell "Get-AppxPackage *windowsphone* | Remove-AppxPackage"
+cls
+echo [=============================50.0%                         ]
 @powershell "Get-AppxPackage *bingsports* | Remove-AppxPackage"
+cls
+echo [=============================53.5%==                       ]
 @powershell "Get-AppxPackage *soundrecorder* | Remove-AppxPackage"
+cls
+echo [=============================56.7%====                     ]
 @powershell "Get-AppxPackage *phone* | Remove-AppxPackage"
+cls
+echo [=============================59.5%======                   ]
 @powershell "Get-AppxPackage *windowsdvdplayer* | Remove-AppxPackage"
+cls
+echo [=============================62.0%========                 ]
 @powershell "Get-AppxPackage  *disney* | Remove-AppxPackage"
+cls
+echo [=============================65.5%==========               ]
 @powerShell "Get-AppxPackage *ShazamEntertainmentLtd.Shazam* | Remove-AppxPackage"
+cls
+echo [=============================69.0%============             ]
 @powershell "Get-AppxPackage 'king.com.CandyCrushSaga' | Remove-AppxPackage"
+cls
+echo [=============================75.0 %=============           ]
 @powerShell "Get-AppxPackage 'king.com.CandyCrushSodaSaga' | Remove-AppxPackage"
+cls
+echo [=============================53.5%===============          ]
 @powershell "Get-AppxPackage 'D5EA27B7.Duolingo-LearnLanguagesforFree' | Remove-AppxPackage"
+cls
+echo [=============================53.5%===================      ]
 @powershell "Get-AppxPackage 'Microsoft.Advertising.Xaml' | Remove-AppxPackage"
+cls
+echo [=============================53.5%=====================    ]
 @powershell "Get-AppxPackage 'Microsoft.Office.OneNote' | Remove-AppxPackage"
+cls
+echo [=============================100.0%========================]
 @powershell "Get-AppxPackage 'Microsoft.YourPhone' | Remove-AppxPackage"
-@powershell "Get-AppxPackage 'Microsoft.ScreenSketch' | Remove-AppxPackage"
+cls
+echo [==========================100.0%==========================]
 
 echo Blocking Data Collection and Telemetry 
 
