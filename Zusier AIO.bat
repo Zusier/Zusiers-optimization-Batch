@@ -844,23 +844,20 @@ echo [=============================75.0 %=============           ]
 @powerShell "Get-AppxPackage 'king.com.CandyCrushSodaSaga' | Remove-AppxPackage"
 cls
 echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
-echo [=============================53.5%===============          ]
+echo [=============================79.5%%===============          ]
 @powershell "Get-AppxPackage 'D5EA27B7.Duolingo-LearnLanguagesforFree' | Remove-AppxPackage"
 cls
 echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
-echo [=============================53.5%===================      ]
+echo [=============================85.0%%===================      ]
 @powershell "Get-AppxPackage 'Microsoft.Advertising.Xaml' | Remove-AppxPackage"
 cls
 echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
-echo [=============================53.5%=====================    ]
+echo [=============================90.5%%=====================    ]
 @powershell "Get-AppxPackage 'Microsoft.Office.OneNote' | Remove-AppxPackage"
 cls
 echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
-echo [=============================100.0%========================]
+echo [=============================100.0%%========================]
 @powershell "Get-AppxPackage 'Microsoft.YourPhone' | Remove-AppxPackage"
-cls
-echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
-echo [==========================100.0%==========================]
 
 echo Blocking Data Collection and Telemetry 
 
