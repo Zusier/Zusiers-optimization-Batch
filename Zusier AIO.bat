@@ -28,6 +28,13 @@ echo This is a BETA version, some errors may occur,.
 
 :: Change Log
 
+:: 7.0.1
+:: - Added Progress Bar to Debloat
+:: - Changed Max Cached Icons
+:: - Rewording
+:: - changed HPET removal method to /deletevalue (thanks to CYNAR)
+
+
 :: 7.0.0
 :: - Changed COM+ Event System to 2
 :: Workstation disables break Ryzen Master
