@@ -28,6 +28,11 @@ echo This is a BETA version, some errors may occur,.
 
 :: Change Log
 
+:: 7.0.2
+:: - Removed Diskperf -N command, performance counters are force enabled and cannot be turned off.
+:: - Enabled MSI mode on GPU
+
+
 :: 7.0.1
 :: - Added Progress Bar to Debloat
 :: - Changed Max Cached Icons
@@ -1175,6 +1180,10 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProf
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "Latency Sensitive" /t REG_SZ /d "True" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrLevel" /t REG_DWORD /d "0" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrDebugMode" /t REG_DWORD /d "0" /f
+:: Enable MSI mode on GPU
+for /f %%g in ('wmic path win32_videocontroller get PNPDeviceID ^| findstr /L "VEN_"') do (
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\%%g\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties" /v MSISupported /t REG_DWORD /d 0x00000001 /f 
+)
 
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Background Only" /t REG_SZ /d "False" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Clock Rate" /t REG_DWORD /d "10000" /f
@@ -1196,7 +1205,6 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProf
 reg add "HKLM\System\CurrentControlSet\Services\VxD\BIOS" /v "CPUPriority" /t REG_DWORD /d "1" /f
 reg add "HKLM\System\CurrentControlSet\Services\VxD\BIOS" /v "FastDRAM" /t REG_DWORD /d "1" /f
 
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Psched" /v "TimerResolution" /t REG_DWORD /d "1" /f 
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "CsEnabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "PerfCalculateActualUtilization" /t REG_DWORD /d "0" /f
@@ -1211,6 +1219,19 @@ reg add "HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed"
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability" /v "TimeStampInterval" /t REG_DWORD /d "0" /f
 reg add "HKCU\Software\Microsoft\Windows\DWM" /v "CompositionPolicy" /t REG_DWORD /d "0" /f
 
+:: disabe network power saving
+for /f %%r in ('reg query "HKLM\SYSTEM\ControlSet001\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}" /f "PCI\VEN_" /d /s^|Findstr HKEY_') do (
+Reg add %%r /v "AutoDisableGigabit" /t REG_SZ /d "0" /f 
+Reg add %%r /v "EnableGreenEthernet" /t REG_SZ /d "0" /f 
+Reg add %%r /v "GigaLite" /t REG_SZ /d "0" /f 
+Reg add %%r /v "PowerSavingMode" /t REG_SZ /d "0" /f 
+)
+
+
+
+
+
+
 :: changed to delete valuee instead of "No" thanks to Cynar
 bcdedit /deletevalue useplatformclock
 :: disable synthetic timer, allows timer resolution to be 0.5ms
@@ -1223,7 +1244,7 @@ bcdedit /set debug No
 bcdedit /set pae ForceEnable
 :: boot screen animation
 bcdedit /set bootux disabled
-:: show names as they load during boot process
+:: show process names as they load during boot process
 bcdedit /set sos Yes
 :: emergency management services
 bcdedit /set ems No
@@ -1252,8 +1273,6 @@ echo Checking System Integrity and Repairs. This may take long
 sfc /scannow
 :: enable .net 4, commonly needed
 dism /online /enable-feature /featurename:NetFx4-AdvSrvs
-:: disable disk performance counters, small boost.
-diskperf -N
 echo ------------------------------------------------------
 echo Process Complete! RESTART YOUR COMPUTER :)
 echo.
