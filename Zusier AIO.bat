@@ -32,6 +32,7 @@ echo This is a BETA version, some errors may occur,.
 :: - Removed Diskperf -N command, performance counters are force enabled and cannot be turned off.
 :: - Enabled MSI mode on GPU
 :: - added hardware scheduling
+:: - rewritten Optiz Script
 
 
 :: 7.0.1
@@ -494,7 +495,7 @@ set /P c=Do you want to customize your services? Script segment created by OptiZ
 if /I "%c%" EQU "Y" goto :next3000
 if /I "%c%" EQU "N" goto :skipOptiZ
 
-goto :next
+goto :next3000
 
 :next3000
  [101;41mDisable Xbox services?:[0m
@@ -506,6 +507,8 @@ IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto skipXbox
 
 :apply
+reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "value" /t REG_SZ /d "00000000" /f
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsRuntime\ActivatableClassId\Windows.Gaming.GameBar.PresenceServer.Internal.PresenceWriter" /v "ActivationType" /t REG_DWORD /d 0 /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XboxNetApiSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XblGameSave" /v "Start" /t REG_DWORD /d "4" /f
@@ -730,17 +733,7 @@ Echo.
 Echo.
 :skipFSO
 echo The next process will start soon...
-set /P c=Do you want to lower audio latency? (do not use if you're an audiophile)[Y/N]?
-if /I "%c%" EQU "Y" goto :tick100
-if /I "%c%" EQU "N" goto :next45
-:tick100
-
-start audl.exe 
-echo Finished!
-
-echo Then next process will begin soon...
-
-:next45
+cls
 
 echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
 echo [                             0%                           ]
@@ -873,10 +866,13 @@ schtasks /change /disable /tn "\Microsoft\Windows\MemoryDiagnostic\ProcessMemory
 schtasks /change /disable /tn "\Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem"
 schtasks /change /disable /tn "\Microsoft\Windows\Windows Error Reporting\QueueReporting"
 
-takeown /f "c:\windows\system32\mcupdate_genuineintel.dll" /r /d y
-takeown /f "c:\windows\system32\mcupdate_authenticamd.dll" /r /d y
-del "c:\windows\system32\mcupdate_genuineintel.dll" /s /f /q
-del "c:\windows\system32\mcupdate_authenticamd.dll" /s /f /q
+:: delete Microcode Updates
+takeown /f "%WinDir%\System32\mcupdate_genuineintel.dll" /r /d y
+takeown /f "%WinDir%\System32\mcupdate_authenticamd.dll" /r /d y
+icacls "%WinDir%\System32\mcupdate_genuineintel.dll" /grant:r Administrators:F /c
+icacls "%WinDir%\System32\mcupdate_authenticamd.dll" /grant:r Administrators:F /c
+del "%WinDir%\System32\mcupdate_genuineintel.dll" /s /f /q
+del "%WinDir%\System32\mcupdate_authenticamd.dll" /s /f /q
 
 :: disable watson malware reports
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting" /v "DisableGenericReports" /t REG_DWORD /d 1 /f
@@ -1101,6 +1097,8 @@ reg add "HKCU\Control Panel\International\User Profile" /v "HttpAcceptLanguageOp
 :: change data usage and limits to manual for compatibility
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\DusmSvc" /v "Start" /t REG_DWORD /d "3" /f
 
+
+:: diagnostics and privacy
 reg add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /v "DiagnosticErrorText" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Strings" /v "DiagnosticErrorText" /t REG_SZ /d "" /f
 reg add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Strings" /v "DiagnosticLinkText" /t REG_SZ /d "" /f
@@ -1111,6 +1109,11 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScr
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\Software\Microsoft\Input\TIPC" /v "Enabled" /t REG_DWORD /d "0" /f
+sc stop DiagTrack
+sc stop dmwappushservice
+sc delete DiagTrack
+sc delete dmwappushservice
+
 
 :: Disable windows insider experiments.
 reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\System" /v "AllowExperimentation" /t REG_DWORD /d "0" /f
@@ -1219,6 +1222,14 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "QosManagesIdleProcesso
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "DisableVsyncLatencyUpdate" /t REG_DWORD /d "1" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "DisableSensorWatchdog" /t REG_DWORD /d "1" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "ExitLatencyCheckEnabled" /t REG_DWORD /d "0" /f
+
+:: disable spectre and meltdown
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "EnableCfg" /t REG_DWORD /d "0" /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "1" /f >nul 2>&1
+:: changing to 2 will enable spectre and meltdown protections
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f >nul 2>&1
+
 :: fast startup (uses ram)
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "HiberbootEnabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed" /v "CursorUpdateInterval" /t REG_DWORD /d "1" /f
