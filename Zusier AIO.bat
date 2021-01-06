@@ -37,6 +37,9 @@ pause
 :: - Sorted services
 :: - Basic Diagnostic Information (helps in device-based patching)
 :: - added variable based cleaning - to be improved
+:: - remove purple text
+:: - removed REAL - may re-add
+:: - Added Declarations to processes that may take a minute.
 
 
 
@@ -178,7 +181,7 @@ echo Beginning basic system check. Logging to log.txt
   pause
 )
 for /F "tokens=* skip=1" %%n in ('WMIC path Win32_VideoController get Name ^| findstr "."') do set GPU_NAME=%%n
-echo %GPU_NAME% >> log.txt
+echo GPU: %GPU_NAME% >> log.txt
 >nul find "NVIDIA" log.txt && (
   echo Nvidia GPU detected. 
   set GPU=NVIDIA
@@ -812,6 +815,7 @@ IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
 Echo.
 :apply
+echo This may take a moment, please be patient.
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Sense" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WdNisSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WdFilter" /v "Start" /t REG_DWORD /d "4" /f
@@ -846,8 +850,6 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\WdNisDrv" /v "Start" /t REG_DWOR
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\WdBoot" /v "Start" /t REG_DWORD /d 4 /f 
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\WdFilter" /v "Start" /t REG_DWORD /d 4 /f
 regsvr32 /s /u "%ProgramFiles%\Windows Defender\shellext.dll"
-taskkill /f /im MSASCuiL.exe
-reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "WindowsDefender" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection" /v "DisableAntiSpywareRealtimeProtection" /t REG_DWORD /d "1" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealtimeMonitoring" /t REG_DWORD /d "1" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection" /v "DpaDisabled" /t REG_DWORD /d "1" /f
@@ -1032,6 +1034,7 @@ IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto optizfinish
 Echo.
 :apply
+echo This may take a moment, please be patient.
 :: Kill onedrive
 taskkill /f /im OneDrive.exe 
 :: run OneDrive uninstall if exists
