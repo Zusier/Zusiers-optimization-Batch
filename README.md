@@ -36,7 +36,7 @@ This tweaks:
 -Advanced System Cleanup (To be Improved **VERY** Soon)
 
 # I'm having an issue, how do I report it?
-You can report issues [here.](https://github.com/Zusier/Zusiers-optimization-Batch/issues/new) it will also be easier to help you if you ran it in
+You can report issues [here.](https://github.com/Zusier/Zusiers-optimization-Batch/issues/new) it will also be easier to help you if you run it in "debug mode". Open the batch in notepad or a text editor and remove "@echo off" then run the batch from cmd BUT running it as "Zusier AIO.bat" >>log.log
 
 # Credits
 A Disclaimer before the credits: i know there is some drama (I would call it) about tweaking, bad tweaks, stolen tweaks etc. If you have an issue with a tweak or believe there is discredit here, please pm me on discord or make an issue on Github.
