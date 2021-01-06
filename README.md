@@ -19,9 +19,7 @@ If you would like to join my Performance Server, [join here!](https://discord.gg
 This tweaks:
 -Mouse and Keyboard Responsiveness
 
--Blocking some Telemetry and Data Tracking
-
--Optimizes Window's Visual Effects
+-Blocking Telemetry and Data Tracking
 
 -Improves System Latency
 
@@ -31,15 +29,14 @@ This tweaks:
 
 -Disabling Fullscreen Optimizations 
 
--Network Optimization (most manually entered from TCP optimizer)
-
 -Debloats Useless Packages
 
--GPU Tweaks & Disables Power Throttling
+-Disabling All types of power throttling
 
--Cleans multiple Temp Folders (no loss to programs using temp)
+-Advanced System Cleanup (To be Improved **VERY** Soon)
 
--Attemps to repair any system/disk errors
+# I'm having an issue, how do I report it?
+You can report issues [here.](https://github.com/Zusier/Zusiers-optimization-Batch/issues/new) it will also be easier to help you if you run it in "debug mode". Open the batch in notepad or a text editor and remove "@echo off" then run the batch from cmd BUT running it as "Zusier AIO.bat" >>log.log
 
 # Credits
 A Disclaimer before the credits: i know there is some drama (I would call it) about tweaking, bad tweaks, stolen tweaks etc. If you have an issue with a tweak or believe there is discredit here, please pm me on discord or make an issue on Github.
@@ -53,6 +50,8 @@ This batch file has been created by Zusier (me) but I have used multiple sources
 
 [Melody & Community](https://discord.gg/fzWpQgm) Some latency and network tweaks but most of all provided machine_specific.exe (disables sleep, enables msi, and optimizes devices for latency in a machine specific manner.)
 
-[Calypto](https://docs.google.com/document/d/1c2-lUJq74wuYK1WrA_bIvgb89dUN0sj8-hO3vqmrau4/edit?usp=sharing)  A honorable mention to the ultimate latency guide.
+[Calypto](https://calypto.us)  A honorable mention to the ultimate latency guide.
 
 [REAL](https://github.com/miniant-git/REAL) Program that reduces audio latency included in Releases
+
+
