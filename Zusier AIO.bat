@@ -23,20 +23,20 @@ echo This is a BETA version, some errors may occur.
 
 pause
 :: TODO
-:: Automatic system detction for automatic cleanup e.g. if AMD do not patch nvidia and apply ULPS patch
-:: leverage local environment variables
+:: Add more to variable based cleaning
 :: fix some echo grammar 
 
 
 :: Change Log
 
-:: 7.0.2
+:: 7.2.0
 :: - Removed Diskperf -N command, performance counters are force enabled and cannot be turned off.
 :: - Enabled MSI mode on GPU
 :: - added hardware scheduling
 :: - updated & upgraded Optiz Script
 :: - Sorted services
 :: - Basic Diagnostic Information (helps in device-based patching)
+:: - added variable based cleaning - to be improved
 
 
 
@@ -189,10 +189,6 @@ echo %GPU_NAME% >> log.txt
 echo Version: %version% >> log.txt
 
 
-
-
-
-
 echo Admin Privileges Acquired!
 cls
 Echo Attempting to automatically create a system Restore Point 
@@ -220,7 +216,6 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "N
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v "Max Cached Icons" /t REG_SZ /d "4000" /f
 :: dont add "- shortcut" when creating a shortcut
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v "link" /t REG_BINARY /d "00000000" /f >nul 2>&1
-
 
 :: Allow for paths over 260 characters
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d "1" /f
@@ -1463,7 +1458,6 @@ reg add "HKCU\Control Panel\International\User Profile" /v "HttpAcceptLanguageOp
 :: change data usage and limits to manual for compatibility
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\DusmSvc" /v "Start" /t REG_DWORD /d "3" /f
 
-
 :: diagnostics and privacy
 reg add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /v "DiagnosticErrorText" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Strings" /v "DiagnosticErrorText" /t REG_SZ /d "" /f
@@ -1479,7 +1473,6 @@ sc stop DiagTrack
 sc stop dmwappushservice
 sc delete DiagTrack
 sc delete dmwappushservice
-
 
 :: Disable windows insider experiments.
 reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\System" /v "AllowExperimentation" /t REG_DWORD /d "0" /f
@@ -1555,11 +1548,14 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProf
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "Latency Sensitive" /t REG_SZ /d "True" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrLevel" /t REG_DWORD /d "0" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrDebugMode" /t REG_DWORD /d "0" /f
+
 :: Enable MSI mode on GPU
 for /f %%g in ('wmic path win32_videocontroller get PNPDeviceID ^| findstr /L "VEN_"') do (
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\%%g\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties" /v MSISupported /t REG_DWORD /d 0x00000001 /f 
 )
+
 :: enable hardware-accelerated gpu scheduling
+:: for win10 2004 and up - support by nvidia 1000+ and amd 5000+
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "HwSchedMode" /t REG_DWORD /d "2" /f >nul 2>&1
 
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Background Only" /t REG_SZ /d "False" /f
@@ -1589,12 +1585,21 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "DisableVsyncLatencyUpd
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "DisableSensorWatchdog" /t REG_DWORD /d "1" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "ExitLatencyCheckEnabled" /t REG_DWORD /d "0" /f
 
+
+set /P c=Do you want to disable Spectre and Meltdown protections? [Y/N]?
+if /I "%c%" EQU "Y" goto :spectre
+if /I "%c%" EQU "N" goto :noMeltdown
+
+:spectre
 :: disable spectre and meltdown
+:: https://meltdownattack.com/
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "EnableCfg" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "1" /f >nul 2>&1
 :: changing to 2 will enable spectre and meltdown protections
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f >nul 2>&1
+
+:noMeltdown
 
 :: fast startup (uses ram)
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "HiberbootEnabled" /t REG_DWORD /d "0" /f
@@ -1610,11 +1615,6 @@ Reg add %%r /v "GigaLite" /t REG_SZ /d "0" /f
 Reg add %%r /v "PowerSavingMode" /t REG_SZ /d "0" /f 
 )
 
-
-
-
-
-
 :: changed to delete valuee instead of "No" thanks to Cynar
 bcdedit /deletevalue useplatformclock
 :: disable synthetic timer, allows timer resolution to be 0.5ms
@@ -1622,6 +1622,7 @@ bcdedit /set useplatformtick yes
 :: force timer to run instead of stopping to save power
 bcdedit /set disabledynamictick Yes
 bcdedit /set bootmenupolicy Legacy
+:: disabling kernel debugging
 bcdedit /set debug No
 :: https://docs.microsoft.com/en-us/windows/win32/memory/physical-address-extension
 bcdedit /set pae ForceEnable
@@ -1637,10 +1638,7 @@ bcdedit /set hypervisorlaunchtype off
 bcdedit /set quietboot yes
 bcdedit /set uselegacyapicmode no
 bcdedit /set timeout 3
-bcdedit /set usefirmwarepcisettings No
 bcdedit /set tscsyncpolicy Enhanced
-bcdedit /set x2apicpolicy Enable
-bcdedit /set usephysicaldestination No
 echo Finished Main Processes, beginning Post Process/Wrap-Up
 echo Removing windows reserved space 
 ::  https://techcommunity.microsoft.com/t5/storage-at-microsoft/windows-10-and-reserved-storage/ba-p/428327
@@ -1650,26 +1648,13 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /v "Pass
 echo Cleaning up
 del /s /f /q %temp%\*.*
 del /s /f /q %WinDir%\temp\*.*
-del 
-del
 
 IF EXIST "%AppData%\Origin" (
-  del %AppData%\Origin\*
-  del %AppData%\Origin\
-  del %AppData%\Origin\
+  del %AppData%\Origin\Telemetry /F /Q
+  del %AppData%\Origin\Logs /F /Q
 ) ELSE (
-  origin doesn work
+ echo Origin wasn't detected, skipping...
 )
-
-
-
-
-
-
-
-
-
-
 
 cleanmgr /autoclean
 echo Cleanup finished!
