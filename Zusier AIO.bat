@@ -1270,6 +1270,9 @@ reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID44231" /t REG
 reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID64640" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID66610" /t REG_DWORD /d 0 /f
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "NvBackend" /f
+:: Disable Write Combining, will break reflex, you can reenable by replacing 1 with 0
+:: Best to google to know what it does ;)
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm" /v "DisableWriteCombining" /t REG_DWORD /d "1" /f
 :: remove telemetry packages
 if exist "%ProgramFiles%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL" (
     rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetryContainer
@@ -1639,7 +1642,6 @@ bcdedit /set ems No
 bcdedit /set hypervisorlaunchtype off
 :: disable windows logo on startup
 bcdedit /set quietboot yes
-bcdedit /set uselegacyapicmode no
 bcdedit /set timeout 3
 bcdedit /set tscsyncpolicy Enhanced
 echo Finished Main Processes, beginning Post Process/Wrap-Up
