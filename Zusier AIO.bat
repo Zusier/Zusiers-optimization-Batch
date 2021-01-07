@@ -25,7 +25,7 @@ pause
 :: TODO
 :: Add more to variable based cleaning
 :: fix some echo grammar 
-
+:: add view system files option
 
 :: Change Log
 
@@ -1072,14 +1072,12 @@ Echo. [101;41mOnedrive has been uninstalled and disabled.[0m
 
 :optizfinish
 
-
 echo The next process will begin soon
 :skipOptiZ
 set /P c=Do you want to disable FSO globally? [Y/N]?
 if /I "%c%" EQU "Y" goto :fso
 if /I "%c%" EQU "N" goto :skipFSO
  
-
 :fso
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehaviorMode" /t REG_DWORD /d "2" /f
@@ -1247,9 +1245,6 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" /v "SubmitSam
 :: Microsoft License Telemetry
 reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /v "NoGenTicket" /t "REG_DWORD" /d "1" /f
 
-
-
-
 :: AMD
 :: ULPS can be disabled by MSI afterburner
   IF "%GPU%" EQU "AMD" (
@@ -1273,6 +1268,8 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "NvBackend" /
 :: Disable Write Combining, will break reflex, you can reenable by replacing 1 with 0
 :: Best to google to know what it does ;)
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm" /v "DisableWriteCombining" /t REG_DWORD /d "1" /f
+:: uninstalling the package will make this redundant, keeping incase uninstalling fails
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\NvTelemetryContainer" /v "Start" /t REG_DWORD /d "4" /f
 :: remove telemetry packages
 if exist "%ProgramFiles%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL" (
     rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetryContainer
@@ -1287,7 +1284,6 @@ schtasks /change /TN NvTmMon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
 schtasks /change /TN NvTmRep_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
 schtasks /change /TN NvTmRepOnLogon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
 )
-
 
 :: Chrome configuration
 icacls "%localappdata%\Google\Chrome\User Data\SwReporter" /inheritance:r /deny "*S-1-1-0:(OI)(CI)(F)" "*S-1-5-7:(OI)(CI)(F)"
@@ -1617,13 +1613,13 @@ reg add "HKCU\Software\Microsoft\Windows\DWM" /v "CompositionPolicy" /t REG_DWOR
 for /f %%r in ('reg query "HKLM\SYSTEM\ControlSet001\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}" /f "PCI\VEN_" /d /s^|Findstr HKEY_') do (
 Reg add %%r /v "AutoDisableGigabit" /t REG_SZ /d "0" /f 
 Reg add %%r /v "EnableGreenEthernet" /t REG_SZ /d "0" /f 
-Reg add %%r /v "GigaLite" /t REG_SZ /d "0" /f 
-Reg add %%r /v "PowerSavingMode" /t REG_SZ /d "0" /f 
+reg add %%r /v "GigaLite" /t REG_SZ /d "0" /f 
+reg add %%r /v "PowerSavingMode" /t REG_SZ /d "0" /f 
 )
 
-:: changed to delete valuee instead of "No" thanks to Cynar
+:: changed to delete value instead of "No" thanks to Cynar
 bcdedit /deletevalue useplatformclock
-:: disable synthetic timer, allows timer resolution to be 0.5ms
+:: disable synthetic timer
 bcdedit /set useplatformtick yes
 :: force timer to run instead of stopping to save power
 bcdedit /set disabledynamictick Yes
@@ -1655,8 +1651,17 @@ del /s /f /q %temp%\*.*
 del /s /f /q %WinDir%\temp\*.*
 
 IF EXIST "%AppData%\Origin" (
-  del %AppData%\Origin\Telemetry /F /Q
-  del %AppData%\Origin\Logs /F /Q
+  del %AppData%\Origin\Telemetry /F /Q /S
+  del %AppData%\Origin\Logs /F /Q /S
+) ELSE (
+ echo Origin wasn't detected, skipping...
+)
+del /s /f /q %localappdata%\Microsoft\Windows\INetCache\IE
+
+IF EXIST "%localAppData%\Battle.net" (
+  del %localAppData%\Battle.net\Cache /F /Q /S
+  del %AppData%\Battle.net\Logs /F /Q /S
+  del %AppData%\Battle.net\Errors /F /Q /S
 ) ELSE (
  echo Origin wasn't detected, skipping...
 )
@@ -1669,7 +1674,6 @@ sfc /scannow
 dism /online /enable-feature /featurename:NetFx4-AdvSrvs
 echo ------------------------------------------------------
 echo Process Complete! RESTART YOUR COMPUTER :)
-echo.
 echo.
 echo.
 :: character below invokes windows sound
