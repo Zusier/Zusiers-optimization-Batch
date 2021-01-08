@@ -1653,6 +1653,12 @@ del /s /f /q %WinDir%\temp\*.*
 IF EXIST "%AppData%\Origin" (
   del %AppData%\Origin\Telemetry /F /Q /S
   del %AppData%\Origin\Logs /F /Q /S
+  del %AppData%\Origin\NucleusCache /F /Q /S
+  del %AppData%\Origin\ConsolidatedCache /F /Q /S
+  del %AppData%\Origin\CatalogCache /F /Q /S
+  del %localAppData%\Origin\ThinSetup /F /Q /S
+  del %AppData%\Origin\Telemetry /F /Q /S
+  del %localAppData%\Origin\Logs /F /Q /S
 ) ELSE (
  echo Origin wasn't detected, skipping...
 )
@@ -1665,6 +1671,24 @@ IF EXIST "%localAppData%\Battle.net" (
 ) ELSE (
  echo Origin wasn't detected, skipping...
 )
+
+
+:: C:\Program Files (x86)\GOG Galaxy
+::C:\Program Files (x86)\GOG Galaxy\GPUCache
+:: C:\ProgramData\GOG.com\Galaxy\crashdumps
+:: C:\ProgramData\GOG.com\Galaxy\logs
+
+
+
+
+
+
+
+
+
+
+
+
 
 cleanmgr /autoclean
 echo Cleanup finished!
