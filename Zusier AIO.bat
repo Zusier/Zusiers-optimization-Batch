@@ -1283,6 +1283,10 @@ rmdir /s /q "%ProgramFiles(x86)%\NVIDIA Corporation\NvTelemetry" 2
 schtasks /change /TN NvTmMon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
 schtasks /change /TN NvTmRep_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
 schtasks /change /TN NvTmRepOnLogon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
+:: use my preference emphasizing: performance
+reg add "HKCU\SOFTWARE\NVIDIA Corporation\Global\NVTweak" /v "Gestalt" /t REG_DWORD /d 1 /f
+:: unhide SILK smoothness
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm\FTS" /v "EnableRID61684" /t REG_DWORD /d 1 /f
 )
 
 :: Chrome configuration
@@ -1554,6 +1558,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrDebugMode
 :: Enable MSI mode on GPU
 for /f %%g in ('wmic path win32_videocontroller get PNPDeviceID ^| findstr /L "VEN_"') do (
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\%%g\Device Parameters\Interrupt Management\MessageSignaledInterruptProperties" /v MSISupported /t REG_DWORD /d 0x00000001 /f 
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\%%g\Device Parameters\Interrupt Management\Affinity Policy" /v DevicePriority /t REG_DWORD /d 3 /f 
 )
 
 :: enable hardware-accelerated gpu scheduling
@@ -1674,19 +1679,9 @@ IF EXIST "%localAppData%\Battle.net" (
 
 
 :: C:\Program Files (x86)\GOG Galaxy
-::C:\Program Files (x86)\GOG Galaxy\GPUCache
+:: C:\Program Files (x86)\GOG Galaxy\GPUCache
 :: C:\ProgramData\GOG.com\Galaxy\crashdumps
 :: C:\ProgramData\GOG.com\Galaxy\logs
-
-
-
-
-
-
-
-
-
-
 
 
 
