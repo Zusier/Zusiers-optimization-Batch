@@ -42,16 +42,18 @@ You can report issues [here.](https://github.com/Zusier/Zusiers-optimization-Bat
 A Disclaimer before the credits: i know there is some drama (I would call it) about tweaking, bad tweaks, stolen tweaks etc. If you have an issue with a tweak or believe there is discredit here, please pm me on discord or make an issue on Github.
 This batch file has been created by Zusier (me) but I have used multiple sources:
 
-[OptizScript](https://github.com/HydroTweaks/Optiz_Services) (created by Hydro) 
+[OptizScript](https://github.com/ItayHydro/Optiz_Services) (created by Hydro) 
 
-[N1kobg](https://n1kobg.blogspot.com/) (some registry tweaks)
+[N1kobg](https://n1kobg.blogspot.com/) - (some registry tweaks) and good guide :)
 
 [Revision Community](https://discord.gg/962y4pU)
 
-[Melody & Community](https://discord.gg/fzWpQgm) Some latency and network tweaks but most of all provided machine_specific.exe (disables sleep, enables msi, and optimizes devices for latency in a machine specific manner.)
+[Melody & Community](https://discord.gg/fzWpQgm) - Most stuff removed, leaving here.
 
-[Calypto](https://calypto.us)  A honorable mention to the ultimate latency guide.
+[Calypto](https://calypto.us) - A honorable mention to the ultimate latency guide.
 
-[REAL](https://github.com/miniant-git/REAL) Program that reduces audio latency included in Releases
+[REAL](https://github.com/miniant-git/REAL) - Program that reduces audio latency included in Releases
+
+Matekoo#1022 (339417835266637836)  - Discord and Spotify debloating
 
 
