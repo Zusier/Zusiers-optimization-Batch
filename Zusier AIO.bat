@@ -23,9 +23,11 @@ echo This is a BETA version, some errors may occur.
 
 pause
 :: TODO
-:: Add more to variable based cleaning
 :: fix some echo grammar 
 :: add view system files option
+:: Steam debloat
+
+
 
 :: Change Log
 
@@ -40,7 +42,8 @@ pause
 :: - remove purple text
 :: - removed REAL - may re-add
 :: - Added Declarations to processes that may take a minute.
-
+:: - Debloat Discord Option (thanks to matekoo)
+:: - Debloat Spotify Option (thanks to matekoo)
 
 
 :: 7.0.1
@@ -194,7 +197,7 @@ echo Version: %version% >> log.txt
 
 echo Admin Privileges Acquired!
 cls
-Echo Attempting to automatically create a system Restore Point 
+echo Attempting to automatically create a system Restore Point 
 :: used to use wmic which in some configurations never worked
 :: https://github.com/Zusier/Zusiers-optimization-Batch/blob/1cd729188505543b75abd01e7f891d9148b19a71/Zusier%20AIO.bat#L109
 @powershell -ExecutionPolicy Bypass -Command "Checkpoint-Computer -Description 'Before Zusier' -RestorePointType 'MODIFY_SETTINGS'"
@@ -515,16 +518,17 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\WwanSvc" /v "Start" /t REG_DWORD
 
 echo The Next process will begin soon...
 
-Echo. [101;41mDisable Windows Search?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Windows Search?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 :: Only implements privacy tweaks/cortana. Disabling the actual service would break indexing and other features.
+:: might just add to privacy
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d 0 /f 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowSearchToUseLocation" /t REG_DWORD /d 0 /f 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "ConnectedSearchPrivacy" /t REG_DWORD /d 3 /f 
@@ -539,39 +543,39 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "CanCortanaBe
 reg add "HKCU\SOFTWARE\Microsoft\Personalization\Settings" /v "AcceptedPrivacyPolicy" /t REG_DWORD /d 0 /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "DeviceHistoryEnabled" /t REG_DWORD /d 0 /f 
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "HistoryViewEnabled" /t REG_DWORD /d 0 /f
-Echo.
-Echo. [101;41mWindows Search has been disabled.[0m
+echo.
+echo. [101;41mWindows Search has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable SmartScreen?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable SmartScreen?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v "SmartScreenEnabled" /t REG_SZ /d "Off" /f 
 reg add "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer" /v "SmartScreenEnabled" /t REG_SZ /d "Off" /f 
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost" /v "EnableWebContentEvaluation" /t REG_DWORD /d 0 /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost" /v "EnableWebContentEvaluation" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d 0 /f
-Echo. [101;41mSmartscreen has been disabled.[0m
+echo. [101;41mSmartscreen has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Windows Store?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Windows Store?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\iphlpsvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\ClipSVC" /v "Start" /t REG_DWORD /d "4" /f
@@ -590,35 +594,35 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Con
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" /v "DODownloadMode" /t REG_DWORD /d 0 /f 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" /v "SystemSettingsDownloadMode" /t REG_DWORD /d 0 /f 
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\DoSvc" /v "Start" /t REG_DWORD /d 4 /f
-Echo. [101;41mWindows Store has been disabled.[0m
+echo. [101;41mWindows Store has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Disk Management Services?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Disk Management Services?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\defragsvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vds" /v "Start" /t REG_DWORD /d "4" /f
-Echo. [101;41mDisk Management has been disabled.[0m
+echo. [101;41mDisk Management has been disabled.[0m
 
 goto next
 
 :next
-Echo. [101;41mDisable Xbox Services?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Xbox Services?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "value" /t REG_SZ /d "00000000" /f
@@ -628,72 +632,72 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XblGameSave" /v "Start
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XblAuthManager" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\xbgm" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\XboxGipSvc" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mXbox Services has been disabled.[0m
+echo.
+echo. [101;41mXbox Services has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Wi-Fi? (PLEASE Skip If You Are Using Wi-Fi!):[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Wi-Fi? (PLEASE Skip If You Are Using Wi-Fi!):[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WwanSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WlanSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\wcncsvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\lmhosts" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mWifi has been disabled.[0m
+echo.
+echo. [101;41mWifi has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Router Support? (safe for most people):[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Router Support? (safe for most people):[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SmsRouter" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\AJRouter" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mRouter Support has been disabled.[0m
+echo.
+echo. [101;41mRouter Support has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable BitLocker?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable BitLocker?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\BDESVC" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mBitlocker has been disabled.[0m
+echo.
+echo. [101;41mBitlocker has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable SettingSync? (syncs settings to microsoft account):[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable SettingSync? (syncs settings to microsoft account):[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 Reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" /v "SyncPolicy" /t Reg_DWORD /d 5 /f
 Reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Accessibility" /v "Enabled" /t Reg_DWORD /d 0 /f
@@ -725,95 +729,95 @@ Reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableWebBro
 Reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableWebBrowserSettingSyncUserOverride" /t Reg_DWORD /d 1 /f
 Reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableWindowsSettingSync" /t Reg_DWORD /d 2 /f
 Reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableWindowsSettingSyncUserOverride" /t Reg_DWORD /d 1 /f
-Echo.
-Echo. [101;41mSettings Sync has been disabled.[0m
+echo.
+echo. [101;41mSettings Sync has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Bluetooth Support?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Bluetooth Support?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\BTAGService" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\bthserv" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\BthAvctpSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NaturalAuthentication" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\BluetoothUserService" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mBlueto has been disabled.[0m
+echo.
+echo. [101;41mBlueto has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Windows Customer Experience Improvement Program?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Windows Customer Experience Improvement Program?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /v "CEIPEnable" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Messenger\Client" /v "CEIP" /t REG_DWORD /d "2" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient" /v "CorporateSQMURL" /t REG_SZ /d "0.0.0.0" /f
-Echo.
-Echo. [101;41mWindows Customer Experience Improvement Program has been disabled.[0m
+echo.
+echo. [101;41mWindows Customer Experience Improvement Program has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Windows Update? (Keep Enabled For Windows Store):[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Windows Update? (Keep Enabled For Windows Store):[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\wuauserv" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WaaSMedicSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\PeerDistSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\UsoSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\DoSvc" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mWindows Update has been disabled.[0m
+echo.
+echo. [101;41mWindows Update has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Biometrics:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Biometrics:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Biometrics" /v "Enabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\WbioSrvc" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mThe services has been disabled.[0m
+echo.
+echo. [101;41mThe services has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Windows Defender?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Windows Defender?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 echo This may take a moment, please be patient.
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Sense" /v "Start" /t REG_DWORD /d "4" /f
@@ -857,20 +861,20 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows Defender" /v "ProductStatus" /t REG_DWO
 reg add "HKLM\SOFTWARE\Microsoft\Windows Defender" /v "ManagedDefenderProductType" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\MRT" /v "DontReportInfectionInformation" /t REG_DWORD /d "1" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\SecurityHealthService" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mDefender has been disabled.[0m
+echo.
+echo. [101;41mDefender has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Windows Firewall?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Windows Firewall?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\mpssvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\BFE" /v "Start" /t REG_DWORD /d "4" /f
@@ -883,20 +887,20 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SharedAccess\Parameter
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile" /v "EnableFirewall" /t REG_DWORD /d 00000000 /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile" /v "DisableNotifications" /t REG_DWORD /d 00000001 /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile" /v "DoNotAllowExceptions" /t REG_DWORD /d 00000001 /f
-Echo.
-Echo. [101;41mWindows Firewall has been disabled.[0m
+echo.
+echo. [101;41mWindows Firewall has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Hyper-V? (most other virtualization software will work):[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Hyper-V? (most other virtualization software will work):[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\HvHost" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vmickvpexchange" /v "Start" /t REG_DWORD /d "4" /f
@@ -907,38 +911,38 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vmicvmsession" /v "Sta
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vmicrdv" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vmictimesync" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\vmicvss" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mHyper-V has been disabled.[0m
+echo.
+echo. [101;41mHyper-V has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Windows Error Reporting and Windows Push Notifications?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Windows Error Reporting and Windows Push Notifications?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WerSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WpnService" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\WpnUserService" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mWindows Error Reporting and Push Notifications have been disabled.[0m
+echo.
+echo. [101;41mWindows Error Reporting and Push Notifications have been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Remote Desktop?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Remote Desktop?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\RasAuto" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\RasMan" /v "Start" /t REG_DWORD /d "4" /f
@@ -947,92 +951,92 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\TermService" /v "Start
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\UmRdpService" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\RemoteRegistry" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\RpcLocator" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mRemote Desktop has been disabled.[0m
+echo.
+echo. [101;41mRemote Desktop has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Print?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Print?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Fax" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Spooler" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\PrintNotify" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\PrintWorkflowUserSvc" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mPrint has been disabled.[0m
+echo.
+echo. [101;41mPrint has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Smart Card Support?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Smart Card Support?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SCardSvr" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\ScDeviceEnum" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\SCPolicySvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\CertPropSvc" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mSmart Cards has been disabled.[0m
+echo.
+echo. [101;41mSmart Cards has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Program Compatibility Assistant?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Program Compatibility Assistant?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat" /v "DisablePCA" /t REG_DWORD /d 1 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\PcaSvc" /v "Start" /t REG_DWORD /d 4 /f
-Echo.
-Echo. [101;41mProgram Compatibility Assistant has been disabled.[0m
+echo.
+echo. [101;41mProgram Compatibility Assistant has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable Task Scheduler?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable Task Scheduler?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto next
-Echo.
+echo.
 :apply
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Schedule" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\TimeBrokerSvc" /v "Start" /t REG_DWORD /d "4" /f
-Echo.
-Echo. [101;41mTask Scheduler has been disabled.[0m
+echo.
+echo. [101;41mTask Scheduler has been disabled.[0m
 
 goto :next
 
 :next
-Echo. [101;41mDisable and uninstall OneDrive?:[0m
-Echo. Press "Y" to apply.
-Echo. Press "N" to skip.
-Echo.
+echo. [101;41mDisable and uninstall OneDrive?:[0m
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
 SET /P choice=  [101;42mY / N:[0m  
 IF /I "%choice%"=="Y" goto apply
 IF /I "%choice%"=="N" goto optizfinish
-Echo.
+echo.
 :apply
 echo This may take a moment, please be patient.
 :: Kill onedrive
@@ -1055,8 +1059,8 @@ rd "%SystemDrive%\OneDriveTemp" /q /s
 rd "%LocalAppData%\Microsoft\OneDrive" /q /s
 rd "%ProgramData%\Microsoft OneDrive" /q /s
 :: delete related registry folders
-reg delete "HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /f
-reg delete "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /f
+reg delete "HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4308-9B53-224DE2ED1FE6}" /f
+reg delete "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4308-9B53-224DE2ED1FE6}" /f
 :: disable onesync
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\OneSyncSvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\OneSyncSvc_402ac" /v "Start" /t REG_DWORD /d "4" /f
@@ -1066,9 +1070,9 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\OneDrive" /v "DisableMeteredNe
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\OneDrive" /v "DisableLibrariesDefaultSaveToOneDrive" /t REG_DWORD /d 1 /f
 reg add "HKCU\SOFTWARE\Microsoft\OneDrive" /v "DisablePersonalSync" /t REG_DWORD /d 1 /f
 :: remove onedrive from explorer/quick access
-reg add "HKCR\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /v System.IsPinnedToNameSpaceTree /d "0" /t REG_DWORD /f
-reg add "HKCR\Wow6432Node\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /v System.IsPinnedToNameSpaceTree /d "0" /t REG_DWORD /f
-Echo. [101;41mOnedrive has been uninstalled and disabled.[0m
+reg add "HKCR\CLSID\{018D5C66-4533-4308-9B53-224DE2ED1FE6}" /v System.IsPinnedToNameSpaceTree /d "0" /t REG_DWORD /f
+reg add "HKCR\Wow6432Node\{018D5C66-4533-4308-9B53-224DE2ED1FE6}" /v System.IsPinnedToNameSpaceTree /d "0" /t REG_DWORD /f
+echo. [101;41mOnedrive has been uninstalled and disabled.[0m
 
 :optizfinish
 
@@ -1085,9 +1089,9 @@ reg add "HKCU\System\GameConfigStore" /v "GameDVR_HonorUserFSEBehaviorMode" /t R
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_DXGIHonorFSEWindowsCompatible" /t REG_DWORD /d "0" /f
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_EFSEFeatureFlags" /t REG_DWORD /d "0" /f
 echo FSO disabled attempt successful!
-Echo.
-Echo.
-Echo.
+echo.
+echo.
+echo.
 :skipFSO
 echo The next process will start soon...
 cls
@@ -1195,12 +1199,199 @@ cls
 echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
 echo [=============================90.5%%=====================    ]
 @powershell "Get-AppxPackage 'Microsoft.Office.OneNote' | Remove-AppxPackage"
+echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
+echo [=============================93.5%%=====================    ]
+@powershell "Get-AppxPackage 'Microsoft.SkypeApp' | Remove-AppxPackage"
 cls
 echo Debloating useless packages (This may take some time. errors occur when package is already removed... ignore them)
 echo [=============================100.0%%========================]
 @powershell "Get-AppxPackage 'Microsoft.YourPhone' | Remove-AppxPackage"
 
-echo Blocking Data Collection and Telemetry 
+:: discord debloat :: most major versions supported
+:: thanks to Maketoo
+
+echo.
+echo. [101;41mWould you like to debloat discord?:[0m
+echo Removes: Updates, Spellcheck, RPC, Krisp, Sync, Overlay. This will decrease CPU and Memory by a large amount.
+echo you will have to make a new shortcut to discord.
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
+SET /P choice=  [101;42mY / N:[0m  
+IF /I "%choice%"=="Y" goto apply
+IF /I "%choice%"=="N" goto next
+echo.
+:apply
+echo Deleting Update function!
+:: kill discord so it doesnt interfere with debloating
+echo Killing discord...
+taskkill /F Discord.exe > NUL 2>&1
+echo Removing discord updates/shortcuts
+del "%HOMEPATH%\Desktop\Discord.ink" /F /Q
+del "%HOMEPATH%\Desktop\Discord.ink - Shortcut" /F /Q
+del "%HOMEPATH%\Desktop\Update.exe" /F /Q
+del "%HOMEPATH%\Desktop\Update.exe - Shortcut" /F /Q
+del "%HOMEPATH%\Desktop\Discord.exe" /F /Q
+del "%HOMEPATH%\Desktop\Discord.exe - Shortcut" /F /Q
+del "%HOMEPATH%\appdata\Local\discord\Update.exe" /F /Q
+del "%HOMEPATH%\appdata\Local\discord\app-0.0.309\Squirrel.exe" /F /Q
+del "%HOMEPATH%\appdata\Local\discord\app-0.0.308\Squirrel.exe" /F /Q
+del "%HOMEPATH%\appdata\Local\discord\app-0.0.307\Squirrel.exe" /F /Q
+del "%HOMEPATH%\appdata\Local\discord\SquirrelSetup.log" /F /Q
+del "%HOMEPATH%\appdata\Local\discord\app-0.0.309\SquirrelSetup.log" /F /Q
+del "%HOMEPATH%\appdata\Local\discord\app-0.0.308\SquirrelSetup.log" /F /Q
+del "%HOMEPATH%\appdata\Local\discord\app-0.0.307\SquirrelSetup.log" /F /Q
+echo removing modules..
+rd /s /q "%HOMEPATH%\appdata\Local\discord\Packages"
+del "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_modules\397863cd8f\2\discord_game_sdk_x64.dll" /F /Q
+del "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_modules\397863cd8f\2\discord_game_sdk_x64.dll" /F /Q
+del "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_modules\397863cd8f\2\discord_game_sdk_x64.dll" /F /Q
+del "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_modules\397863cd8f\2\discord_game_sdk_x86.dll" /F /Q
+del "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_modules\397863cd8f\2\discord_game_sdk_x86.dll" /F /Q
+del "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_modules\397863cd8f\2\discord_game_sdk_x86.dll" /F /Q
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_cloudsync"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_cloudsync"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_cloudsync"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_dispatch"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_dispatch"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_dispatch"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_erlpack"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_erlpack"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_erlpack"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_game_utils"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_game_utils"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_game_utils"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_krisp"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_krisp"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_krisp"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_media"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_media"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_media"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_rpc"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_rpc"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_rpc"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_Spellcheck"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_Spellcheck"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_Spellcheck"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.309\modules\discord_overlay2"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.308\modules\discord_overlay2"
+rd /s /q "%HOMEPATH%\appdata\Roaming\discord\0.0.307\modules\discord_overlay2"
+echo.
+echo. [101;41mDiscord has been debloated![0m
+
+:next
+
+
+echo.
+echo. [101;41mWould you like to debloat Spotify? [EXPERIMENTAL]:[0m
+echo Most stuff will still work, other than the friends list.
+echo If you are just playing music, you're fine.
+
+echo. Press "Y" to apply.
+echo. Press "N" to skip.
+echo.
+SET /P choice=  [101;42mY / N:[0m  
+IF /I "%choice%"=="Y" goto apply
+IF /I "%choice%"=="N" goto next
+echo.
+:apply
+echo Killing spotify...
+taskkill /F Spotify.exe > NUL 2>&1
+echo 
+del "%appdata%\Spotify\SpotifyMigrator.exe" > NUL
+del "%appdata%\Spotify\SpotifyStartupTask.exe" > NUL
+echo Debloating...
+del "%HOMEPATH%\appdata\Roaming\Spotify\SpotifyMigrator.exe" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\SpotifyStartupTask.exe" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\buddy-list.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\concert.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\concerts.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\lyrics.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\error.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\findfriends.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\show.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\station.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\stations.spa" /F /Q
+del "%HOMEPATH%\appdata\Roaming\Spotify\Apps\legacy-lyrics.spa" /F /Q
+echo removing other languages
+del "%appdata%\Spotify\locales\am.pak" /F /Q
+del "%appdata%\Spotify\locales\ar.mo" /F /Q
+del "%appdata%\Spotify\locales\ar.pak" /F /Q
+del "%appdata%\Spotify\locales\bg.pak" /F /Q
+del "%appdata%\Spotify\locales\bn.pak" /F /Q
+del "%appdata%\Spotify\locales\ca.pak" /F /Q
+del "%appdata%\Spotify\locales\cs.mo" /F /Q
+del "%appdata%\Spotify\locales\cs.pak" /F /Q
+del "%appdata%\Spotify\locales\da.pak" /F /Q
+del "%appdata%\Spotify\locales\de.mo" /F /Q
+del "%appdata%\Spotify\locales\de.pak" /F /Q
+del "%appdata%\Spotify\locales\el.mo" /F /Q
+del "%appdata%\Spotify\locales\el.pak" /F /Q
+del "%appdata%\Spotify\locales\es.mo" /F /Q
+del "%appdata%\Spotify\locales\es.pak" /F /Q
+del "%appdata%\Spotify\locales\es-419.mo" /F /Q
+del "%appdata%\Spotify\locales\es-419.pak" /F /Q
+del "%appdata%\Spotify\locales\et.pak" /F /Q
+del "%appdata%\Spotify\locales\fa.pak" /F /Q
+del "%appdata%\Spotify\locales\fi.mo" /F /Q
+del "%appdata%\Spotify\locales\fi.pak" /F /Q
+del "%appdata%\Spotify\locales\fil.pak" /F /Q
+del "%appdata%\Spotify\locales\fr.mo" /F /Q
+del "%appdata%\Spotify\locales\fr.pak" /F /Q
+del "%appdata%\Spotify\locales\fr-CA.mo" /F /Q
+del "%appdata%\Spotify\locales\gu.pak" /F /Q
+del "%appdata%\Spotify\locales\he.mo" /F /Q
+del "%appdata%\Spotify\locales\he.pak" /F /Q
+del "%appdata%\Spotify\locales\hi.pak" /F /Q
+del "%appdata%\Spotify\locales\hr.pak" /F /Q
+del "%appdata%\Spotify\locales\hu.mo" /F /Q
+del "%appdata%\Spotify\locales\hu.pak" /F /Q
+del "%appdata%\Spotify\locales\id.mo" /F /Q
+del "%appdata%\Spotify\locales\id.pak" /F /Q
+del "%appdata%\Spotify\locales\it.mo" /F /Q
+del "%appdata%\Spotify\locales\it.pak" /F /Q
+del "%appdata%\Spotify\locales\ja.mo" /F /Q
+del "%appdata%\Spotify\locales\ja.pak" /F /Q
+del "%appdata%\Spotify\locales\kn.pak" /F /Q
+del "%appdata%\Spotify\locales\ko.mo" /F /Q
+del "%appdata%\Spotify\locales\ko.pak" /F /Q
+del "%appdata%\Spotify\locales\lt.pak" /F /Q
+del "%appdata%\Spotify\locales\lv.pak" /F /Q
+del "%appdata%\Spotify\locales\ml.pak" /F /Q
+del "%appdata%\Spotify\locales\mr.pak" /F /Q
+del "%appdata%\Spotify\locales\ms.mo" /F /Q
+del "%appdata%\Spotify\locales\ms.pak" /F /Q
+del "%appdata%\Spotify\locales\nb.pak" /F /Q
+del "%appdata%\Spotify\locales\nl.mo" /F /Q
+del "%appdata%\Spotify\locales\nl.pak" /F /Q
+del "%appdata%\Spotify\locales\pl.mo" /F /Q
+del "%appdata%\Spotify\locales\pl.pak" /F /Q
+del "%appdata%\Spotify\locales\pt-BR.mo" /F /Q
+del "%appdata%\Spotify\locales\pt-BR.pak" /F /Q
+del "%appdata%\Spotify\locales\pt-PT.pak" /F /Q
+del "%appdata%\Spotify\locales\ro.pak" /F /Q
+del "%appdata%\Spotify\locales\ru.mo" /F /Q
+del "%appdata%\Spotify\locales\ru.pak" /F /Q
+del "%appdata%\Spotify\locales\sk.pak" /F /Q
+del "%appdata%\Spotify\locales\sl.pak" /F /Q
+del "%appdata%\Spotify\locales\sr.pak" /F /Q
+del "%appdata%\Spotify\locales\sv.mo" /F /Q
+del "%appdata%\Spotify\locales\sv.pak" /F /Q
+del "%appdata%\Spotify\locales\sw.pak" /F /Q
+del "%appdata%\Spotify\locales\ta.pak" /F /Q
+del "%appdata%\Spotify\locales\te.pak" /F /Q
+del "%appdata%\Spotify\locales\th.mo" /F /Q
+del "%appdata%\Spotify\locales\th.pak" /F /Q
+del "%appdata%\Spotify\locales\tr.mo" /F /Q
+del "%appdata%\Spotify\locales\tr.pak" /F /Q
+del "%appdata%\Spotify\locales\uk.pak" /F /Q
+del "%appdata%\Spotify\locales\vi.mo" /F /Q
+del "%appdata%\Spotify\locales\vi.pak" /F /Q
+del "%appdata%\Spotify\locales\zh-CN.pak" /F /Q
+del "%appdata%\Spotify\locales\zh-Hant.mo" /F /Q
+del "%appdata%\Spotify\locales\zh-TW.pak" /F /Q
+echo.
+echo. [101;41mSpotify has been debloated![0m
 
 takeown /f "%WinDir%\System32\GameBarPresenceWriter.exe" /a
 takeown /f "%WinDir%\System32\mobsync.exe" /a
@@ -1215,6 +1406,8 @@ del "%WinDir%\System32\GameBarPresenceWriter.exe" /s /f /q > NUL 2>&1
 del "%WinDir%\System32\mobsync.exe" /s /f /q > NUL 2>&1
 del "%WinDir%\System32\HelpPane.exe" /s /f /q > NUL 2>&1
 
+
+echo Blocking Data Collection and Telemetry 
 schtasks /change /disable /tn "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
 schtasks /change /disable /tn "\Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
 schtasks /change /disable /tn "\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
@@ -1265,9 +1458,6 @@ reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID44231" /t REG
 reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID64640" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID66610" /t REG_DWORD /d 0 /f
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "NvBackend" /f
-:: Disable Write Combining, will break reflex, you can reenable by replacing 1 with 0
-:: Best to google to know what it does ;)
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm" /v "DisableWriteCombining" /t REG_DWORD /d "1" /f
 :: uninstalling the package will make this redundant, keeping incase uninstalling fails
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\NvTelemetryContainer" /v "Start" /t REG_DWORD /d "4" /f
 :: remove telemetry packages
@@ -1277,8 +1467,8 @@ if exist "%ProgramFiles%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL" (
 )
 :: remove leftover files
 del /s %systemdrive%\System32\DriverStore\FileRepository\NvTelemetry*.dll
-rmdir /s /q "%ProgramFiles%\NVIDIA Corporation\NvTelemetry" 2
-rmdir /s /q "%ProgramFiles(x86)%\NVIDIA Corporation\NvTelemetry" 2
+del %ProgramFiles%\NVIDIA Corporation\NvTelemetry" 2
+del %ProgramFiles(x86)%\NVIDIA Corporation\NvTelemetry" 2
 :: Disable Nvidia tasks/services
 schtasks /change /TN NvTmMon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
 schtasks /change /TN NvTmRep_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
@@ -1310,7 +1500,7 @@ schtasks /change /disable /tn "GoogleUpdateTaskMachineUA"
 :: Firefox configuration 
 :: web hardening, change default browser agent
 reg add HKLM\SOFTWARE\Policies\Mozilla\Firefox /v DisableDefaultBrowserAgent /t REG_DWORD /d 1 /f
-schtasks /change /disable /tn "\Mozilla\Firefox Default Browser Agent 308046B0AF4A39CB"
+schtasks /change /disable /tn "\Mozilla\Firefox Default Browser Agent 309046B0AF4A39CB"
 schtasks /change /disable /tn "\Mozilla\Firefox Default Browser Agent D2CEEC440E2074BD"
 :: disable mozilla telemetry
 :: you cant harden web browsers very easily via batch script :( I'd reccomend looking up ghack user.js if youre a security freak
@@ -1321,23 +1511,10 @@ reg add HKLM\SOFTWARE\Policies\Mozilla\Firefox /v DisableTelemetry /t REG_DWORD 
 reg add "HKCU\SOFTWARE\Microsoft\MediaPlayer\Preferences" /v "UsageTracking" /t REG_DWORD /d 0 /f
 sc stop "WMPNetworkSvc" & sc config "WMPNetworkSvc" start=disabled
 
-:: visual studio code telemtry, doesnt block, but deletes current collected data
-:: TODO: find regkey to VS telemetry
-rmdir /s /q "%AppData%\vstelemetry" 2>nul
-rmdir /s /q "%LocalAppData%\Microsoft\VSApplicationInsights" 2>nul
-rmdir /s /q "%ProgramData%\Microsoft\VSApplicationInsights" 2>nul
-rmdir /s /q "%Temp%\Microsoft\VSApplicationInsights" 2>nul
-rmdir /s /q "%Temp%\VSFaultInfo" 2>nul
-rmdir /s /q "%Temp%\VSFeedbackPerfWatsonData" 2>nul
-rmdir /s /q "%Temp%\VSFeedbackVSRTCLogs" 2>nul
-rmdir /s /q "%Temp%\VSRemoteControl" 2>nul
-rmdir /s /q "%Temp%\VSTelem" 2>nul
-rmdir /s /q "%Temp%\VSTelem.Out" 2>nul
-
 :: dotnet telemtry
 :: sets environment variable in PATH
 setx DOTNET_CLI_TELEMETRY_OPTOUT 1
-rmdir /s /q "%USERPROFILE%\.dotnet\TelemetryStorageService" 2>nul
+del %USERPROFILE%\.dotnet\TelemetryStorageService" 2>nul
 
 :: disable powershell telemetry 
 :: sets environment variable in PATH
@@ -1499,7 +1676,7 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{8BC
 :: email
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{9231CB4C-BF57-4AF3-8C55-FDA7BFCC04C5}" /v "Value" /t REG_SZ /d "Deny" /f
 :: tasks
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{E390DF20-07DF-446D-B962-F5C953062741}" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{E390DF20-07DF-446D-B962-F5C953072741}" /v "Value" /t REG_SZ /d "Deny" /f
 
 :: Disable access to location/ device hardening
 :: read up: https://www.c-amie.co.uk/technical/windows-10-registry-paths-for-privacy-settings/
@@ -1546,7 +1723,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProf
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "Background Only" /t REG_SZ /d "True" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "BackgroundPriority" /t REG_DWORD /d "24" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "Clock Rate" /t REG_DWORD /d "10000" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "GPU Priority" /t REG_DWORD /d "18" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "GPU Priority" /t REG_DWORD /d "12" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "Priority" /t REG_DWORD /d "8" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "Scheduling Category" /t REG_SZ /d "High" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" /v "SFIO Priority" /t REG_SZ /d "High" /f
@@ -1567,20 +1744,22 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "HwSchedMode"
 
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Background Only" /t REG_SZ /d "False" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Clock Rate" /t REG_DWORD /d "10000" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d "8" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d "12" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Priority" /t REG_DWORD /d "6" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Scheduling Category" /t REG_SZ /d "High" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
-:: https://github.com/djdallmann/GamingPCSetup/blob/master/RESEARCH/WINSERVICES/README.md#q-what-does-the-hidden-mmcss-latency-sensitive-registry-key-actually-do-what-is-the-default-value
+:: https://github.com/djdallmann/GamingPCSetup/blob/master/CONTENT/RESEARCH/WINSERVICES/README.md#q-what-does-the-hidden-mmcss-latency-sensitive-registry-key-actually-do-what-is-the-default-value
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Latency Sensitive" /t REG_SZ /d "True" /f
 
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio" /v "Background Only" /t REG_SZ /d "True" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio" /v "Clock Rate" /t REG_DWORD /d "10000" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio" /v "GPU Priority" /t REG_DWORD /d "8" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio" /v "GPU Priority" /t REG_DWORD /d "12" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio" /v "Priority" /t REG_DWORD /d "6" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio" /v "Scheduling Category" /t REG_SZ /d "Medium" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio" /v "SFIO Priority" /t REG_SZ /d "Normal" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NoLazyMode" /t REG_DWORD /d "1" /f
+:: https://github.com/djdallmann/GamingPCSetup/blob/master/CONTENT/RESEARCH/WINSERVICES/README.md#q-what-the-heck-is-nolazymode-is-it-real-what-does-it-do
+:: removed temporarily, want to test more 
+:: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NoLazyMode" /t REG_DWORD /d "1" /f
 
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "CsEnabled" /t REG_DWORD /d "0" /f
@@ -1591,7 +1770,6 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "QosManagesIdleProcesso
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "DisableVsyncLatencyUpdate" /t REG_DWORD /d "1" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "DisableSensorWatchdog" /t REG_DWORD /d "1" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "ExitLatencyCheckEnabled" /t REG_DWORD /d "0" /f
-
 
 set /P c=Do you want to disable Spectre and Meltdown protections? [Y/N]?
 if /I "%c%" EQU "Y" goto :spectre
@@ -1614,7 +1792,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed"
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability" /v "TimeStampInterval" /t REG_DWORD /d "0" /f
 reg add "HKCU\Software\Microsoft\Windows\DWM" /v "CompositionPolicy" /t REG_DWORD /d "0" /f
 
-:: disabe network power saving
+:: disable network power saving
 for /f %%r in ('reg query "HKLM\SYSTEM\ControlSet001\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}" /f "PCI\VEN_" /d /s^|Findstr HKEY_') do (
 Reg add %%r /v "AutoDisableGigabit" /t REG_SZ /d "0" /f 
 Reg add %%r /v "EnableGreenEthernet" /t REG_SZ /d "0" /f 
@@ -1643,6 +1821,7 @@ bcdedit /set ems No
 bcdedit /set hypervisorlaunchtype off
 :: disable windows logo on startup
 bcdedit /set quietboot yes
+:: dual boot timeout
 bcdedit /set timeout 3
 bcdedit /set tscsyncpolicy Enhanced
 echo Finished Main Processes, beginning Post Process/Wrap-Up
@@ -1652,30 +1831,31 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /v "Misc
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /v "ShippedWithReserves" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /v "PassedPolicy" /t REG_DWORD /d "0" /f
 echo Cleaning up
-del /s /f /q %temp%\*.*
-del /s /f /q %WinDir%\temp\*.*
+del /s /f /q %temp%\*.* 2>nul
+del /s /f /q %WinDir%\temp\*.* 2>nul
 
-IF EXIST "%AppData%\Origin" (
-  del %AppData%\Origin\Telemetry /F /Q /S
-  del %AppData%\Origin\Logs /F /Q /S
-  del %AppData%\Origin\NucleusCache /F /Q /S
-  del %AppData%\Origin\ConsolidatedCache /F /Q /S
-  del %AppData%\Origin\CatalogCache /F /Q /S
-  del %localAppData%\Origin\ThinSetup /F /Q /S
-  del %AppData%\Origin\Telemetry /F /Q /S
-  del %localAppData%\Origin\Logs /F /Q /S
-) ELSE (
- echo Origin wasn't detected, skipping...
-)
+
+:: used to use if statement for deletion for some program cleanups to prevent errors, switched to hiding errors instead :p
+:: example
+:: IF EXIST "MAIN FOLDER PATH HERE" (
+::  del MULTIPLE PATHS HERE /F /Q /S
+:: ) ELSE (
+:: echo PROGRAMNAME wasn't detected, skipping...
+:: )
+del %AppData%\Origin\Telemetry /F /Q /S 2>nul
+del %AppData%\Origin\Logs /F /Q /S 2>nul
+del %AppData%\Origin\NucleusCache /F /Q /S 2>nul
+del %AppData%\Origin\ConsolidatedCache /F /Q /S 2>nul
+del %AppData%\Origin\CatalogCache /F /Q /S 2>nul
+del %localAppData%\Origin\ThinSetup /F /Q /S 2>nul
+del %AppData%\Origin\Telemetry /F /Q /S 2>nul
+del %localAppData%\Origin\Logs /F /Q /S 2>nul
+
 del /s /f /q %localappdata%\Microsoft\Windows\INetCache\IE
 
-IF EXIST "%localAppData%\Battle.net" (
-  del %localAppData%\Battle.net\Cache /F /Q /S
-  del %AppData%\Battle.net\Logs /F /Q /S
-  del %AppData%\Battle.net\Errors /F /Q /S
-) ELSE (
- echo Origin wasn't detected, skipping...
-)
+del %localAppData%\Battle.net\Cache /F /Q /S 2>nul
+del %AppData%\Battle.net\Logs /F /Q /S 2>nul
+del %AppData%\Battle.net\Errors /F /Q /S 2>nul
 
 
 :: C:\Program Files (x86)\GOG Galaxy
@@ -1683,8 +1863,18 @@ IF EXIST "%localAppData%\Battle.net" (
 :: C:\ProgramData\GOG.com\Galaxy\crashdumps
 :: C:\ProgramData\GOG.com\Galaxy\logs
 
-
-
+:: visual studio code telemtry, doesnt block, but deletes current collected data
+:: TODO: find regkey(s) to VS telemetry
+del %AppData%\vstelemetry 2>nul
+del %LocalAppData%\Microsoft\VSApplicationInsights 2>nul
+del %ProgramData%\Microsoft\VSApplicationInsights 2>nul
+del %Temp%\Microsoft\VSApplicationInsights 2>nul
+del %Temp%\VSFaultInfo 2>nul
+del %Temp%\VSFeedbackPerfWatsonData 2>nul
+del %Temp%\VSFeedbackVSRTCLogs 2>nul
+del %Temp%\VSRemoteControl 2>nul
+del %Temp%\VSTelem 2>nul
+del %Temp%\VSTelem.Out 2>nul
 cleanmgr /autoclean
 echo Cleanup finished!
 echo Checking System Integrity and Repairs. This may take long
