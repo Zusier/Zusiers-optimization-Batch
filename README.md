@@ -33,7 +33,7 @@ This tweaks:
 
 -Disabling All types of power throttling
 
--Advanced System Cleanup (To be Improved **VERY** Soon)
+-Advanced System Cleanup
 
 # I'm having an issue, how do I report it?
 You can report issues [here.](https://github.com/Zusier/Zusiers-optimization-Batch/issues/new) it will also be easier to help you if you run it in "debug mode". Open the batch in notepad or a text editor and remove "@echo off" then run the batch from cmd BUT running it as "Zusier AIO.bat" >>log.log
@@ -56,4 +56,5 @@ This batch file has been created by Zusier (me) but I have used multiple sources
 
 Matekoo#1022 (339417835266637836)  - Discord and Spotify debloating
 
+[https://github.com/djdallmann/GamingPCSetup](https://github.com/djdallmann/GamingPCSetup) In-Depth Guide on PC Optimization and Configuration
 
