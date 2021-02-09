@@ -3,7 +3,7 @@ Zusier's Optimization Batch File is made to give a perfect balance in performanc
 
 # Is this safe? Why should I use it?
 
-**Disclaimer:** If you are on a microsoft account, you can either: Not use this, or switch to a local account.
+**Disclaimer:** If you are on a microsoft account, when given the option to disable Microsoft store, click No.
 
 This batch file was made for personal use to decrease time tweaking pc's, but I felt not many stable and effective batch files existed, so I oriented it to the user.
 Because the batch is in early use and creation, the bat may be unstable. I have tested the .bat on MANY VMs and it seems to run fine. If you seem to find an issue, report it [here.](https://github.com/Zusier/Zusiers-optimization-Batch/issues/new) 
