@@ -16,7 +16,7 @@ echo d8888888888 "Y88888  88888P' 888  "Y8888  888          8888888P"  "Y888888 
 echo ---------------------------------------------------------------------------------------------------
 echo.
 echo It is reccomended to run with NSUDO to get all of the tweaks working, as some will result in "Access Denied"
-echo If you are on a microsoft account, you can either: Not use this, or switch to a local account.
+echo If you are on a microsoft account, when given the option to disable Microsoft store, click No.
 echo.
 echo There WILL be errors about missing files, services etc. This is due to some tweaks being for only some devices like AMD or NVIDIA
 echo If you are interested in seeing what this is doing, please open in something such as notepad++, lines that have :: are notes/documentation
